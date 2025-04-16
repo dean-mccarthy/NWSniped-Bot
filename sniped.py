@@ -7,7 +7,7 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
 intents = discord.Intents.default()
-intents.message_content = True  # Needed to read messages
+intents.message_content = True
 
 bot = commands.Bot(command_prefix='/', intents=intents)
 
@@ -15,8 +15,19 @@ bot = commands.Bot(command_prefix='/', intents=intents)
 async def on_ready():
     print(f'Logged in as {bot.user}')
 
-@bot.command()
-async def ping(ctx):
-    await ctx.send('Pong!')
+async def load_cogs():
+    for filename in os.listdir('./cogs'):
+        if filename.endswith('.py'):
+            try:
+                await bot.load_extension(f'cogs.{filename[:-3]}')
+                print(f"Loaded extension: {filename}")
+            except Exception as e:
+                print(f"Failed to load {filename}: {e}")
 
-bot.run('TOKEN')
+async def main():
+    async with bot:
+        await load_cogs()
+        await bot.start(TOKEN)
+
+import asyncio
+asyncio.run(main())
