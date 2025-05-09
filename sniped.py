@@ -14,6 +14,8 @@ bot = commands.Bot(command_prefix='/', intents=intents)
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user}')
+    await bot.tree.sync()
+
 
 async def load_cogs():
     for filename in os.listdir('./cogs'):

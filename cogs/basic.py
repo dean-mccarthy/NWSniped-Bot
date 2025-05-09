@@ -1,12 +1,35 @@
+import discord
+from discord import app_commands
 from discord.ext import commands
+from util import save_data, load_data
+
 
 class Basic(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
-    async def ping(self, ctx):
-        await ctx.send("Pong!")
+    @app_commands.command(name="ping", description="pongs")
+    async def ping(self, interaction: discord.Interaction):
+        await interaction.response.send_message("Pong!")
 
-async def setup(bot):  # <-- this must be async
-    await bot.add_cog(Basic(bot))  # <-- now correctly awaited
+    @app_commands.command(name="initgame", description="Initialize or reset the snipe game")
+    async def init_game(self, interaction: discord.Interaction):
+        save_data({"snipes": [], "users": {}})
+        await interaction.response.send_message("Game has been initialized!", ephemeral=True)
+
+    @app_commands.command(name="addplayer", description="Register a player in the snipe game")
+    @app_commands.describe(player="Select the player to add")
+    async def add_player(self, interaction: discord.Interaction, player: discord.Member):
+        data = load_data()
+        user_id = str(player.id)
+
+        if user_id in data["users"]:
+            await interaction.response.send_message(f"{player.display_name} is already registered.", ephemeral=True)
+            return
+
+        data["users"][user_id] = {"snipes_given": 0, "snipes_received": 0}
+        save_data(data)
+        await interaction.response.send_message(f"{player.display_name} has been added to the game!", ephemeral=True)
+
+async def setup(bot):
+    await bot.add_cog(Basic(bot))
