@@ -2,8 +2,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 import os
-from util import save_data, load_data
-
+from util import save_data, load_data, get_filename
 
 class Basic(commands.Cog):
     def __init__(self, bot):
@@ -20,9 +19,11 @@ class Basic(commands.Cog):
 
         Initializes json file for current server if one does not exist already
         """
-        if os.path.exists("sniped.json"):
-            data = load_data()
-            if data.get("users") or data.get("snipes"):
+        #print("Attempting to init game")
+        guild_id = interaction.guild.id
+        if os.path.exists(get_filename(guild_id)):
+            data = load_data(guild_id)
+            if "users" in data or "snipes" in data:
                 await interaction.response.send_message("Game already exists!", ephemeral=True)
                 return
 
@@ -32,7 +33,12 @@ class Basic(commands.Cog):
     @app_commands.command(name="addplayer", description="Register a player in the snipe game")
     @app_commands.describe(player="Select the player to add")
     async def add_player(self, interaction: discord.Interaction, player: discord.Member):
-        data = load_data(interaction.guild.id)
+        guild_id = interaction.guild.id
+
+        if not os.path.exists(get_filename(guild_id)):
+            await interaction.response.send_message("Game is not initialized!")
+            
+        data = load_data(guild_id)
         user_id = str(player.id)
 
         if user_id in data["users"]:
@@ -40,24 +46,37 @@ class Basic(commands.Cog):
             return
 
         data["users"][user_id] = {"snipes_given": 0, "snipes_received": 0}
-        save_data(interaction.guild.id, data)
-        await interaction.response.send_message(f"{player.display_name} has been added to the game!", ephemeral=True)
-
+        save_data(guild_id, data)
+        await interaction.response.send_message(f"{player.mention} has been added to the game!")
+        return
 
 
     @app_commands.command(name="snipe", description="Snipe a player!")
     @app_commands.describe(player="Select the player to snipe")
     async def snipe(self, interaction: discord.Interaction, player: discord.Member):
-        data = load_data()
+        """
+        Command called when player wishes to submit a snipe of another player
+        Game rules indicate an image must precede or follow this command featuring the snipe
+
+        Args:
+            player (discord.Member): The target being sniped
+
+        Returns:
+            Ephemeral message to the target requesting confirmation of snipe
+        """
+        guild_id = interaction.guild.id
+
+        data = load_data(guild_id)
         target_id = str(player.id)
 
         if target_id not in data["users"]:
             await interaction.response.send_message(f"{player.display_name} is not in the game!.", ephemeral=True)
             return
-        if target_id == interaction.user.id:
+        if target_id == str(interaction.user.id):
             await interaction.response.send_message("You can't snipe yourself!", ephemeral=True)
             return
         
 
 async def setup(bot):
     await bot.add_cog(Basic(bot))
+

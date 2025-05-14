@@ -1,0 +1,30 @@
+# TODO - Discord Snipe Bot
+
+## Core Features
+- [x] Implement /initgame to start a new game
+- [x] Implement /addplayer to register players
+- [ ] Implement /snipe to snipe another player
+- [ ] Implement image verification for snipes (attach image check)
+- [ ] Implement point counting
+- [ ] Implement settings/config file
+- [ ] Implement leaderboard
+- [ ] Implement acheivements
+
+## Data Management
+- [x] Store game data in server-specific JSON files
+- [ ] Add backup/restore for game states
+
+## UX Improvements
+- [ ] Make bot request confirmation from players players when or sniped
+- [ ] Add feedback messages for common errors (e.g., no game found)
+- [ ] Implement scoreboards or leaderboards
+
+## Admin Commands
+- [ ] Add /resetgame or /endgame
+- [ ] Add /removeperson from game
+- [ ] Add /settings to adjust settings
+
+## Stretch Features
+- [ ] Implement player opt-in/opt-out
+
+# Last updated: 2025-05-13

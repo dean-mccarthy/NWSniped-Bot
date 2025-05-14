@@ -1,7 +1,6 @@
 import json
 import os
 
-
 def load_data(guild_id):
     filename = get_filename(guild_id)
     if not os.path.exists(filename):
@@ -15,6 +14,9 @@ def save_data(guild_id, data):
         json.dump(data, f, indent=2)
 
 def get_filename(guild_id):
-    return f"server_{guild_id}.json"
+    #print("Finding file for guild: ", guild_id)
+    filename = f"data/server_{guild_id}.json"
+    #print("Found filename: ", filename)
+    return filename
 
 
