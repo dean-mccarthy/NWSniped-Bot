@@ -1,14 +1,20 @@
 import json
 import os
 
-DATA_FILE = "snipes.json"
 
-def load_data():
-    if not os.path.exists(DATA_FILE):
+def load_data(guild_id):
+    filename = get_filename(guild_id)
+    if not os.path.exists(filename):
         return {"snipes": [], "users": {}}
-    with open(DATA_FILE, "r") as f:
+    with open(filename, "r") as f:
         return json.load(f)
 
-def save_data(data):
-    with open(DATA_FILE, "w") as f:
+def save_data(guild_id, data):
+    filename = get_filename(guild_id)
+    with open(filename, "w") as f:
         json.dump(data, f, indent=2)
+
+def get_filename(guild_id):
+    return f"server_{guild_id}.json"
+
+
