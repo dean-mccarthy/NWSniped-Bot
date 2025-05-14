@@ -68,11 +68,16 @@ class Basic(commands.Cog):
 
         data = load_data(guild_id)
         target_id = str(player.id)
+        sniper_id = str(interaction.user.id)
+
+        if sniper_id not in data["users"]:
+            await interaction.response.send_message("You are not in the game!", ephemeral=True)
+            return
 
         if target_id not in data["users"]:
-            await interaction.response.send_message(f"{player.display_name} is not in the game!.", ephemeral=True)
+            await interaction.response.send_message(f"{player.display_name} is not in the game!", ephemeral=True)
             return
-        if target_id == str(interaction.user.id):
+        if target_id == sniper_id:
             await interaction.response.send_message("You can't snipe yourself!", ephemeral=True)
             return
         
