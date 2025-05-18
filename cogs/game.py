@@ -1,3 +1,4 @@
+import random
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -26,6 +27,7 @@ class Game(commands.Cog):
         data = load_data(guild_id)
         target_id = str(player.id)
         sniper_id = str(interaction.user.id)
+        config = load_config(guild_id)
 
         if sniper_id not in data["users"]:
             await interaction.response.send_message("You are not in the game!", ephemeral=True)
@@ -37,6 +39,49 @@ class Game(commands.Cog):
         if target_id == sniper_id:
             await interaction.response.send_message("You can't snipe yourself!", ephemeral=True)
             return
+        
+        data["users"][sniper_id]["snipes_given"] += config["points_per_snipe"]
+        data["users"][target_id]["snipes_received"] -= config["penalty_per_snipe"]
+
+        save_data(guild_id, data)
+
+        message = get_snipe_message(sniper_id, target_id)
+        await interaction.response.send_message(message)
+
+
+def get_snipe_message(sniper, target):
+    """
+    Returns a randomly chosen snipe message using Discord mentions.
+
+    Args:
+        sniper (discord.Member): The player who performed the snipe.
+        target (discord.Member): The player who got sniped.
+
+    Returns:
+        str: A message string including mentions.
+    """
+    sniper_mention = sniper.mention
+    target_mention = target.mention
+
+    sayings = [
+        # Savage / Competitive
+        f"Boom! Headshot. {sniper_mention} sniped {target_mention}.",
+        f"{sniper_mention} caught {target_mention} lackin'",
+        f"{target_mention} never saw it coming. {sniper_mention} kills + 1",
+        f"One shot, one kill. {sniper_mention} shot down {target_mention}.",
+        f"{sniper_mention} just made {target_mention} their latest highlight reel.",
+        
+        # Stealthy / Sneaky
+        f"Silently and swiftly, {sniper_mention} took down {target_mention}.",
+        f"{target_mention} just learned to check their six—thanks to {sniper_mention}.",
+        f"Sneaky little snipe by {sniper_mention} on {target_mention}.",
+        f"In the shadows, {sniper_mention} strikes. Farewell, {target_mention}.",
+    ]
+
+    return random.choice(sayings)
+
+
+
         
 async def setup(bot: commands.Bot):
     await bot.add_cog(Game(bot))
