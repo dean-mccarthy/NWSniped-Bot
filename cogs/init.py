@@ -28,13 +28,10 @@ class Init(commands.Cog):
                 return
 
         data = {"snipes": [], "users": {}}
-        config = {
-            "points_per_snipe": 1.0,
-            "penalty_per_snipe": 1.0,
-            "achievements_enabled": True
-        }
+        config = ServerConfig()
         save_data(guild_id, data)
         save_config(guild_id, config)
+
         await interaction.response.send_message("Game has been initialized!")
 
     @app_commands.command(name="addplayer", description="Register a player in the snipe game")
@@ -44,6 +41,7 @@ class Init(commands.Cog):
 
         if not os.path.exists(get_filename(guild_id)):
             await interaction.response.send_message("Game is not initialized!")
+            return
             
         data = load_data(guild_id)
         user_id = str(player.id)
@@ -52,14 +50,14 @@ class Init(commands.Cog):
             await interaction.response.send_message(f"{player.display_name} is already registered.", ephemeral=True)
             return
 
-        data["users"][user_id] = {"snipes_given": 0, "snipes_received": 0}
+        data["users"][user_id] = User()
         save_data(guild_id, data)
         await interaction.response.send_message(f"{player.mention} has been added to the game!")
         return
     
 
     @app_commands.command(name="reset", description="Resets the snipe game")
-    async def init_game(self, interaction: discord.Interaction):
+    async def reset_game(self, interaction: discord.Interaction):
         """
         Command to initialize game
 

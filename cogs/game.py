@@ -20,14 +20,15 @@ class Game(commands.Cog):
             player (discord.Member): The target being sniped
 
         Returns:
-            Ephemeral message to the target requesting confirmation of snipe
+            Message in chat announcing the snipe
+            Snipe is recorded into datafiles
+            TODO: Ephemeral message to the target requesting confirmation of snipe
         """
         guild_id = interaction.guild.id
 
         data = load_data(guild_id)
         target_id = str(player.id)
         sniper_id = str(interaction.user.id)
-        config = load_config(guild_id)
 
         if sniper_id not in data["users"]:
             await interaction.response.send_message("You are not in the game!", ephemeral=True)
@@ -40,12 +41,13 @@ class Game(commands.Cog):
             await interaction.response.send_message("You can't snipe yourself!", ephemeral=True)
             return
         
-        data["users"][sniper_id]["snipes_given"] += config["points_per_snipe"]
-        data["users"][target_id]["snipes_received"] -= config["penalty_per_snipe"]
+        data["users"][sniper_id].snipes += 1
+        data["users"][target_id].times_sniped += 1
 
         save_data(guild_id, data)
 
-        message = get_snipe_message(sniper_id, target_id)
+        message = get_snipe_message(interaction.user, player) #uses raw discord members since mention needs discord ids instead of strings
+        print(message)
         await interaction.response.send_message(message)
 
 

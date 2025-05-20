@@ -2,12 +2,14 @@
   "snipes": [],
   "users": {
     "315900188722200576": {
-      "snipes_given": 0.0,
-      "snipes_received": 0
+      "snipes": 9.0,
+      "times_sniped": 0.0,
+      "acheivements": null
     },
     "1361870886885527572": {
-      "snipes_given": 0,
-      "snipes_received": 0.0
+      "snipes": 0.0,
+      "times_sniped": 7.0,
+      "acheivements": null
     }
   }
 }

@@ -1,5 +1,6 @@
 import json
 import os
+from models import User, ServerConfig
 
 CONFIG_DIR = os.path.join("data","config")
 DATA_DIR = os.path.join("data", "game")
@@ -9,12 +10,18 @@ def load_data(guild_id):
     if not os.path.exists(filename):
         return {"snipes": [], "users": {}}
     with open(filename, "r") as f:
-        return json.load(f)
+        data = json.load(f)
+        data["users"] = {k: User.from_dict(v) for k, v in data["users"].items()}
+        return data
 
 def save_data(guild_id, data):
     filename = get_filename(guild_id)
+    json_data = {
+        "snipes": data.get("snipes", []),
+        "users": {k: v.to_dict() for k, v in data["users"].items()}
+    }
     with open(filename, "w") as f:
-        json.dump(data, f, indent=2)
+        json.dump(json_data, f, indent=2)
 
 def get_filename(guild_id):
     #print("Finding file for guild: ", guild_id)
@@ -25,19 +32,15 @@ def get_filename(guild_id):
 def save_config(guild_id, config):
     filename = get_config(guild_id)
     with open(filename, "w") as f:
-        json.dump
+        json.dump(config.to_dict(), f, indent=2)
 
 def load_config(guild_id):
     filename = get_config(guild_id)
     if not os.path.exists(filename):
-        config = {
-            "points_per_snipe": 0.0,
-            "penalty_per_snipe": 0.0,
-            "achievements_enabled": False
-        }
-        return config
+        return ServerConfig()
+    
     with open(filename, "r") as f:
-        return json.load(f)
+        return ServerConfig.from_dict(json.load(f))
 
 def get_config(guild_id):
     filename = os.path.join(CONFIG_DIR, f"config_{guild_id}.json")
