@@ -3,7 +3,12 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 import os
+from dotenv import load_dotenv
 from util import *
+
+load_dotenv()
+TOKEN = os.getenv('DISCORD_TOKEN')
+SERVER_ID = int(os.getenv('SERVER_ID'))
 
 class Game(commands.Cog):
     def __init__(self, bot):
@@ -81,8 +86,6 @@ def get_snipe_message(sniper, target):
     ]
 
     return random.choice(sayings)
-
-
 
         
 async def setup(bot: commands.Bot):

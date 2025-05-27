@@ -2,7 +2,12 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 import os
+from dotenv import load_dotenv
 from util import *
+
+load_dotenv()
+TOKEN = os.getenv('DISCORD_TOKEN')
+SERVER_ID = int(os.getenv('SERVER_ID'))
 
 class Init(commands.Cog):
     def __init__(self, bot):
@@ -56,25 +61,21 @@ class Init(commands.Cog):
         return
     
 
-    @app_commands.command(name="reset", description="Resets the snipe game")
+    @app_commands.command(name="resetgame", description="Resets the snipe game")
     async def reset_game(self, interaction: discord.Interaction):
         """
-        Command to initialize game
+        Command to reset game
 
         Initializes json file for current server if one does not exist already
         """
         #print("Attempting to init game")
         guild_id = interaction.guild.id
         data = {"snipes": [], "users": {}}
-        config = {
-            "points_per_snipe": 1.0,
-            "penalty_per_snipe": 1.0,
-            "achievements_enabled": True
-        }
+        config = ServerConfig()
         save_data(guild_id, data)
         save_config(guild_id, config)
-        await interaction.response.send_message("Game has been initialized!")
+        await interaction.response.send_message("Game has been reset!")
+        return
     
 async def setup(bot):
     await bot.add_cog(Init(bot))
-
