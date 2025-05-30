@@ -3,7 +3,7 @@
 ## Core Features
 - [x] Implement /initgame to start a new game
 - [x] Implement /addplayer to register players
-- [ ] Implement /snipe to snipe another player
+- [x] Implement /snipe to snipe another player
 - [ ] Implement image verification for snipes (attach image check)
 - [ ] Implement point counting
 - [ ] Implement settings/config file

@@ -1,4 +1,15 @@
 {
   "snipes": [],
-  "users": {}
+  "users": {
+    "1361870886885527572": {
+      "snipes": 0.0,
+      "times_sniped": 3.0,
+      "acheivements": null
+    },
+    "315900188722200576": {
+      "snipes": 3.0,
+      "times_sniped": 0.0,
+      "acheivements": null
+    }
+  }
 }
