@@ -5,26 +5,21 @@
 - [x] Implement /addplayer to register players
 - [x] Implement /snipe to snipe another player
 - [ ] Implement image verification for snipes (attach image check)
-- [ ] Implement point counting
-- [ ] Implement settings/config file
-- [ ] Implement leaderboard
+- [x] Implement point counting
+- [x] Implement settings/config file
+- [x] Implement leaderboard
 - [ ] Implement acheivements
 
 ## Data Management
 - [x] Store game data in server-specific JSON files
-- [ ] Add backup/restore for game states
 
 ## UX Improvements
 - [ ] Make bot request confirmation from players players when or sniped
-- [ ] Add feedback messages for common errors (e.g., no game found)
-- [ ] Implement scoreboards or leaderboards
 
 ## Admin Commands
 - [ ] Add /resetgame or /endgame
 - [ ] Add /removeperson from game
-- [ ] Add /settings to adjust settings
+- [x] Add /settings to adjust settings
+- [ ] Add role based command restrictions
 
-## Stretch Features
-- [ ] Implement player opt-in/opt-out
-
-# Last updated: 2025-05-13
+# Last updated: 2025-06-01
