@@ -1,3 +1,6 @@
+import discord
+from discord import app_commands
+from discord.ext import commands
 import json
 import os
 from models import User, ServerConfig
@@ -46,4 +49,19 @@ def get_config(guild_id):
     filename = os.path.join(CONFIG_DIR, f"config_{guild_id}.json")
     #print("Found filename: ", filename)
     return filename
+
+def add_player_helper(guild_id: int, player: discord.Member):
+    if not os.path.exists(get_filename(guild_id)):
+        return ("Game is not initialized!", False)
+        
+    data = load_data(guild_id)
+    user_id = str(player.id)
+
+    if user_id in data["users"]:
+        return (f"{player.display_name} is already registered.", True)
+
+    data["users"][user_id] = User()
+    save_data(guild_id, data)
+
+    return (f"{player.mention} has been added to the game!", False)
 

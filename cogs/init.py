@@ -44,20 +44,16 @@ class Init(commands.Cog):
     async def add_player(self, interaction: discord.Interaction, player: discord.Member):
         guild_id = interaction.guild.id
 
-        if not os.path.exists(get_filename(guild_id)):
-            await interaction.response.send_message("Game is not initialized!")
-            return
-            
-        data = load_data(guild_id)
-        user_id = str(player.id)
+        result = add_player_helper(guild_id, player)
+        await interaction.response.send_message(result[0], ephemeral=result[1])
+        return
+    
+    @app_commands.command(name="joingame", description="Register yourself in the snipe game")
+    async def join_game(self, interaction: discord.Interaction):
+        guild_id = interaction.guild.id
 
-        if user_id in data["users"]:
-            await interaction.response.send_message(f"{player.display_name} is already registered.", ephemeral=True)
-            return
-
-        data["users"][user_id] = User()
-        save_data(guild_id, data)
-        await interaction.response.send_message(f"{player.mention} has been added to the game!")
+        result = add_player_helper(guild_id, interaction.user)
+        await interaction.response.send_message(result[0], ephemeral=result[1])
         return
     
 
@@ -66,7 +62,7 @@ class Init(commands.Cog):
         """
         Command to reset game
 
-        Initializes json file for current server if one does not exist already
+        Resets json file for current server
         """
         #print("Attempting to init game")
         guild_id = interaction.guild.id
@@ -76,6 +72,12 @@ class Init(commands.Cog):
         save_config(guild_id, config)
         await interaction.response.send_message("Game has been reset!")
         return
+    
+    
+
+
+
+    
     
 async def setup(bot):
     await bot.add_cog(Init(bot))

@@ -23,7 +23,6 @@ class Leaderboard(commands.Cog):
         Returns:
             Message in chat with current leaderboard
         """
-        print("Generating Leaderboard")
         guild_id = interaction.guild.id 
 
         data = load_data(guild_id)
@@ -61,6 +60,39 @@ class Leaderboard(commands.Cog):
             table.append(f"{name:<20} {snipes:>6.0f} {sniped:>13.0f} {score:>6.1f}")
         print(table)
         output = "```text\n" + "\n".join(table) + "\n```"
+        await interaction.response.send_message(output)
+
+    @app_commands.command(name="listplayers", description="Lists all registered players")
+    async def list_players(self, interaction: discord.Interaction):
+        """
+        Command to list all players
+
+        Returns:
+            List of all players in codeblock format
+        """
+
+        guild_id = interaction.guild.id 
+
+        data = load_data(guild_id)
+
+        rows = []
+        if not data["users"].items():
+            await interaction.response.send_message("No users in the game!")
+
+        for user_id, user in data["users"].items():
+            member = interaction.guild.get_member(int(user_id))
+            if member:
+                name = member.display_name
+            else:
+                try:
+                    user_obj = await self.bot.fetch_user(int(user_id))
+                    name = user_obj.name  # fallback to username (not nickname)
+                except:
+                    name = "Unknown"
+            rows.append(name)
+
+        rows.sort()
+        output = "```Player Name\n" + "\n".join(rows) + "\n```"
         await interaction.response.send_message(output)
 
 
