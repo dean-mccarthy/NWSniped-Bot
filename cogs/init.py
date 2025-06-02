@@ -2,8 +2,10 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 import os
+from models import *
 from dotenv import load_dotenv
 from util import *
+from typing import Literal
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -72,6 +74,31 @@ class Init(commands.Cog):
         save_config(guild_id, config)
         await interaction.response.send_message("Game has been reset!")
         return
+    
+    @app_commands.command(name="config", description="Adjusts the settings of the game")
+    async def config(self, interaction: discord.Interaction, setting: Literal["points_per_snipe", "penalty_per_snipe", "acheivements_enabled"], value: str):
+        guild_id = interaction.guild.id
+        newConf = load_config(guild_id)
+        match setting:
+            case "points_per_snipe":
+                newConf.points_per_snipe = float(value)
+                save_config(guild_id, newConf)
+                await interaction.response.send_message(f"Points_per_snipe now set to {newConf.points_per_snipe}", ephemeral=True)
+                return
+            case "penalty_per_snipe":
+                newConf.penalty_per_snipe = float(value)
+                save_config(guild_id, newConf)
+                await interaction.response.send_message(f"Penalty_per_snipe now set to {newConf.penalty_per_snipe}", ephemeral=True)
+                return
+            case "acheivements_enabled":
+                if str(value) != "True" and str(value) != "False":
+                    await interaction.response.send_message("Acheivements_Enabled must be `True` or `False`", ephemeral=True)
+                    return
+                newConf.acheivements_enabled = str(value) == "True"
+                save_config(guild_id, newConf)
+                await interaction.response.send_message(f"Acheivements are now {"enabled" if newConf.acheivements_enabled else "disabled"}", ephemeral=True)
+                return
+
     
     
 
