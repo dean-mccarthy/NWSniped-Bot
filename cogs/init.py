@@ -19,6 +19,21 @@ class Init(commands.Cog):
     async def ping(self, interaction: discord.Interaction):
         await interaction.response.send_message("Pong!")
 
+    @app_commands.command(name="help", description="List all available commands")
+    async def help(self, interaction:discord.Interaction):
+        embed = discord.Embed(title="Sniped Bot Help", description="Here are all of my commands:", color=discord.Color.blue())
+
+        commands = sorted(self.bot.tree.get_commands(), key=lambda cmd:cmd.name)
+
+        for command in commands:
+            embed.add_field(
+                name=f"/{command.name}",
+                value=command.description or "No description provided.",
+                inline=False
+            )
+
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
     @app_commands.command(name="initgame", description="Initialize the snipe game")
     async def init_game(self, interaction: discord.Interaction):
         """
