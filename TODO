@@ -4,14 +4,16 @@
 - [x] Implement /initgame to start a new game
 - [x] Implement /addplayer to register players
 - [x] Implement /snipe to snipe another player
-- [ ] Implement image verification for snipes (attach image check)
 - [x] Implement point counting
 - [x] Implement settings/config file
 - [x] Implement leaderboard
+- [ ] Implement image verification for snipes (attach image check)
 - [ ] Implement acheivements
+- [ ] Implement safe windows
 
 ## Data Management
 - [x] Store game data in server-specific JSON files
+- [ ] Remove invalid snipe
 
 ## UX Improvements
 - [ ] Make bot request confirmation from players players when or sniped
@@ -22,4 +24,4 @@
 - [x] Add /settings to adjust settings
 - [ ] Add role based command restrictions
 
-# Last updated: 2025-06-01
+# Last updated: 2025-06-05
