@@ -1,4 +1,4 @@
-# UBC A Cappella Sniped Bot v1.0!
+# UBC A Cappella Sniped Bot v1.1!
 Welcome to the Discord Sniped Bot designed for use in UBC A Cappella!  
 This bot exists to facilitate gameplay by keeping track of scores, leaderboards, and acheivements.  
 If you run into any issues or have ideas for additional features please message me on discord: @oriose
@@ -53,4 +53,10 @@ Take pictures of other players without them knowing and try to avoid getting pic
   - Sniping cannot occur for members involved for 10 minutes before/after the class
 - Snipes cannot occur in the UBC A Cappella Clubroom
   - This does not include the communcal clubs area just outside of the clubroom
+
+
+## Version Changelog
+
+### V1.1
+- Converted all data storage from JSON to MongoDB
 
