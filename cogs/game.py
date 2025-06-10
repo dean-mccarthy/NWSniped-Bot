@@ -32,8 +32,8 @@ class Game(commands.Cog):
         guild_id = interaction.guild.id
 
         data = load_data(guild_id)
-        target_id = str(player.id)
-        sniper_id = str(interaction.user.id)
+        target_id = player.id
+        sniper_id = interaction.user.id
 
         if sniper_id not in data["users"]:
             await interaction.response.send_message("You are not in the game!", ephemeral=True)

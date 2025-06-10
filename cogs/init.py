@@ -4,7 +4,7 @@ from discord.ext import commands
 import os
 from models import *
 from dotenv import load_dotenv
-from util import *
+from util_db import *
 from typing import Literal
 
 load_dotenv()
@@ -43,16 +43,13 @@ class Init(commands.Cog):
         """
         #print("Attempting to init game")
         guild_id = interaction.guild.id
-        if os.path.exists(get_filename(guild_id)):
-            data = load_data(guild_id)
-            if "users" in data or "snipes" in data:
-                await interaction.response.send_message("Game already exists!", ephemeral=True)
-                return
-
-        data = {"snipes": [], "users": {}}
-        config = ServerConfig()
-        save_data(guild_id, data)
-        save_config(guild_id, config)
+        check_config = get_config(guild_id)
+        if check_config:
+            await interaction.response.send_message("Game already exists!", ephemeral=True)
+            return
+        
+        config = ServerConfig(guild_id=guild_id)
+        save_config(config)
 
         await interaction.response.send_message("Game has been initialized!")
 
@@ -81,37 +78,31 @@ class Init(commands.Cog):
 
         Resets json file for current server
         """
-        #print("Attempting to init game")
-        guild_id = interaction.guild.id
-        data = {"snipes": [], "users": {}}
-        config = ServerConfig()
-        save_data(guild_id, data)
-        save_config(guild_id, config)
-        await interaction.response.send_message("Game has been reset!")
+        #TODO FIX THIS so it works with DB
         return
     
     @app_commands.command(name="config", description="Adjusts the settings of the game")
-    async def config(self, interaction: discord.Interaction, setting: Literal["points_per_snipe", "penalty_per_snipe", "acheivements_enabled"], value: str):
+    async def config(self, interaction: discord.Interaction, setting: Literal["points_per_snipe", "penalty_per_snipe", "achievements_enabled"], value: str):
         guild_id = interaction.guild.id
-        newConf = load_config(guild_id)
+        newConf = get_config(guild_id)
         match setting:
             case "points_per_snipe":
                 newConf.points_per_snipe = float(value)
-                save_config(guild_id, newConf)
-                await interaction.response.send_message(f"Points_per_snipe now set to {newConf.points_per_snipe}", ephemeral=True)
+                save_config(newConf)
+                await interaction.response.send_message(f"Points per snipe now set to {newConf.points_per_snipe}", ephemeral=True)
                 return
             case "penalty_per_snipe":
                 newConf.penalty_per_snipe = float(value)
-                save_config(guild_id, newConf)
-                await interaction.response.send_message(f"Penalty_per_snipe now set to {newConf.penalty_per_snipe}", ephemeral=True)
+                save_config(newConf)
+                await interaction.response.send_message(f"Penalty per snipe now set to {newConf.penalty_per_snipe}", ephemeral=True)
                 return
-            case "acheivements_enabled":
+            case "achievements_enabled":
                 if str(value) != "True" and str(value) != "False":
-                    await interaction.response.send_message("Acheivements_Enabled must be `True` or `False`", ephemeral=True)
+                    await interaction.response.send_message("Achievements_enabled must be `True` or `False`", ephemeral=True)
                     return
-                newConf.acheivements_enabled = str(value) == "True"
-                save_config(guild_id, newConf)
-                await interaction.response.send_message(f"Acheivements are now {"enabled" if newConf.acheivements_enabled else "disabled"}", ephemeral=True)
+                newConf.achievements_enabled = str(value) == "True"
+                save_config(newConf)
+                await interaction.response.send_message(f"Achievements are now {"enabled" if newConf.achievements_enabled else "disabled"}", ephemeral=True)
                 return
 
     
