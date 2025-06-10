@@ -10,6 +10,8 @@
 - [ ] Implement image verification for snipes (attach image check)
 - [ ] Implement acheivements
 - [ ] Implement safe windows
+- [ ] Implement Snipeception
+- [ ] Implement list_snipes
 
 ## Data Management
 - [x] Store game data in server-specific JSON files
@@ -17,6 +19,7 @@
 
 ## UX Improvements
 - [ ] Make bot request confirmation from players players when or sniped
+- [ ] Add check for most commands to ensure game is initialized
 
 ## Admin Commands
 - [ ] Add /resetgame or /endgame

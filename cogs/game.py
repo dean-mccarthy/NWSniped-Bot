@@ -4,7 +4,7 @@ from discord import app_commands
 from discord.ext import commands
 import os
 from dotenv import load_dotenv
-from util import *
+from util_db import *
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -30,27 +30,21 @@ class Game(commands.Cog):
             TODO: Ephemeral message to the target requesting confirmation of snipe
         """
         guild_id = interaction.guild.id
-
-        data = load_data(guild_id)
         target_id = player.id
         sniper_id = interaction.user.id
 
-        if sniper_id not in data["users"]:
-            await interaction.response.send_message("You are not in the game!", ephemeral=True)
-            return
-
-        if target_id not in data["users"]:
-            await interaction.response.send_message(f"{player.display_name} is not in the game!", ephemeral=True)
-            return
         if target_id == sniper_id:
             await interaction.response.send_message("You can't snipe yourself!", ephemeral=True)
             return
-        
-        data["users"][sniper_id].snipes += 1
-        data["users"][target_id].times_sniped += 1
+        if not get_player(guild_id, sniper_id):
+            await interaction.response.send_message("You are not in the game!", ephemeral=True)
+            return
 
-        save_data(guild_id, data)
+        if not get_player(guild_id, target_id):
+            await interaction.response.send_message(f"{player.display_name} is not in the game!", ephemeral=True)
+            return
 
+        update_snipes(guild_id, sniper_id, target_id)
         message = get_snipe_message(interaction.user, player) #uses raw discord members since mention needs discord ids instead of strings
         print(message)
         await interaction.response.send_message(message)

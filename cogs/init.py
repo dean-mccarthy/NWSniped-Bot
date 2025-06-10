@@ -70,6 +70,26 @@ class Init(commands.Cog):
         await interaction.response.send_message(result[0], ephemeral=result[1])
         return
     
+    @app_commands.command(name="removeplayer", description="Remove a player from the game")
+    @app_commands.describe(player="Select the player to remove")
+    async def remove_player(self, interaction: discord.Interaction, player: discord.Member):
+        """
+        Command to remove player from game
+
+        Removes a player from game and deletes all snipes related to them
+        """
+        guild_id = interaction.guild.id
+
+        if not get_player(guild_id, player.id):
+            await interaction.response.send_message(f"{player.display_name} is not in the game.", ephemeral=True)
+
+        remove_player(guild_id, player.id)
+        # TODO: Remove snipes from player
+
+        await interaction.response.send_message(f"{player.display_name} has been removed from the game.", ephemeral=True)
+        
+
+    
 
     @app_commands.command(name="resetgame", description="Resets the snipe game")
     async def reset_game(self, interaction: discord.Interaction):
@@ -78,7 +98,11 @@ class Init(commands.Cog):
 
         Resets json file for current server
         """
-        #TODO FIX THIS so it works with DB
+        guild_id = interaction.guild.id
+        config = ServerConfig(guild_id=guild_id)
+        save_config(config)
+        reset_snipes(guild_id) # remove all snipes
+
         return
     
     @app_commands.command(name="config", description="Adjusts the settings of the game")
@@ -106,10 +130,6 @@ class Init(commands.Cog):
                 return
 
     
-    
-
-
-
     
     
 async def setup(bot):

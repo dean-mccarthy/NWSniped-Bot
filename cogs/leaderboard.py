@@ -4,7 +4,7 @@ from discord import app_commands
 from discord.ext import commands
 import os
 from dotenv import load_dotenv
-from util import *
+from util_db import *
 from typing import Literal
 
 load_dotenv()
@@ -16,7 +16,7 @@ class Leaderboard(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="leaderboard", description="Show the leaderboard")
-    async def showleaderboard(self, interaction: discord.Interaction, sort_by: Literal["score", "snipes", "times_sniped"] = "score", sort_direction: Literal["Highest First", "Lowest First"] = "Highest First"):
+    async def showleaderboard(self, interaction: discord.Interaction, sort_by: Literal["name", "score", "snipes", "times_sniped"] = "score", sort_direction: Literal["Highest First", "Lowest First"] = "Highest First"):
         """
         Command called to generate current leaderboard in chat
 
@@ -25,17 +25,18 @@ class Leaderboard(commands.Cog):
         """
         guild_id = interaction.guild.id 
 
-        data = load_data(guild_id)
-        config = load_config(guild_id)
+        players = get_players_from_guild(guild_id)
+        config = get_config(guild_id)
 
         rows = []
-        if not data["users"].items():
+        if not players:
             await interaction.response.send_message("No users in the game!")
 
+        print("Players:", players)
 
-        for user_id, user in data["users"].items():
+        for user in players:
             score = (user.snipes * config.points_per_snipe) - (user.times_sniped * config.penalty_per_snipe)
-            member = interaction.guild.get_member(int(user_id))
+            member = interaction.guild.get_member(int(user.user_id))
             if member:
                 name = member.display_name
             else:
@@ -73,26 +74,26 @@ class Leaderboard(commands.Cog):
 
         guild_id = interaction.guild.id 
 
-        data = load_data(guild_id)
+        data = get_players_from_guild(guild_id)
 
         rows = []
-        if not data["users"].items():
+        if not data:
             await interaction.response.send_message("No users in the game!")
 
-        for user_id, user in data["users"].items():
-            member = interaction.guild.get_member(int(user_id))
+        for user in data:
+            member = interaction.guild.get_member(int(user.user_id))
             if member:
                 name = member.display_name
             else:
                 try:
-                    user_obj = await self.bot.fetch_user(int(user_id))
+                    user_obj = await self.bot.fetch_user(int(user.user_id))
                     name = user_obj.name  # fallback to username (not nickname)
                 except:
                     name = "Unknown"
             rows.append(name)
 
         rows.sort()
-        output = "```Player Name\n" + "\n".join(rows) + "\n```"
+        output = "```PLAYER NAME:\n" + "\n".join(rows) + "\n```"
         await interaction.response.send_message(output)
 
 

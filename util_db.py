@@ -21,11 +21,10 @@ def save_config(config: ServerConfig):
     )
 
 def get_player(guild_id, player_id):
-    print("player: ", player_id, "guild: ", guild_id)
     data = db.users.find_one({"guild_id": guild_id, "_id":player_id})
-    print("data", data)
-    if data:
-        print("User: ", User.from_dict(data))
+    # print("data", data)
+    # if data:
+    #     print("User: ", User.from_dict(data))
     return User.from_dict(data) if data else None
 
 def save_player(player: User):
@@ -35,6 +34,41 @@ def save_player(player: User):
         upsert=True
     )
 
+def remove_player(guild_id, player_id):
+    db.users.remove({"guild_id": guild_id, "_id": player_id})
+
+def get_players_from_guild(guild_id):
+    data = db.users.find({"guild_id": guild_id})
+    return [User.from_dict(user) for user in data]
+
+def update_snipes(guild_id, sniper_id, target_id):
+    db.users.update_one( # update sniper
+        {"guild_id": guild_id, "_id": sniper_id},
+        {"$inc": {"snipes": 1.0}}
+        )
+    db.users.update_one( # update target
+        {"guild_id": guild_id, "_id": target_id},
+        {"$inc": {"times_sniped": 1.0}}
+        )
+    snipe = Snipe(guild_id, sniper_id, target_id)
+    db.snipes.insert_one(snipe.to_dict()) # add snipe to collection
+
+def reset_snipes(guild_id):
+    db.snipes.remove({"guild_id": guild_id})
+
+def reset_players(guild_id):
+    db.users.update_many(
+        {"guild_id": str(guild_id)},
+        {
+            "$set": {
+                "snipes": 0.0,
+                "times_sniped": 0.0,
+                "achievements": []
+            }
+        }
+    )
+
+    
 
 def add_player_helper(guild_id: int, player: discord.Member):
     if not get_config(guild_id):
