@@ -41,7 +41,7 @@ class Leaderboard(commands.Cog):
                 name = member.display_name
             else:
                 try:
-                    user_obj = await self.bot.fetch_user(int(user_id))
+                    user_obj = await self.bot.fetch_user(user.user_id)
                     name = user_obj.name  # fallback to username (not nickname)
                 except:
                     name = "Unknown"
