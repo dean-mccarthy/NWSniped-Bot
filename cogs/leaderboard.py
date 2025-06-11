@@ -35,16 +35,7 @@ class Leaderboard(commands.Cog):
 
         for user_id, user in data["users"].items():
             score = (user.snipes * config.points_per_snipe) - (user.times_sniped * config.penalty_per_snipe)
-            member = interaction.guild.get_member(int(user_id))
-            if member:
-                name = member.display_name
-            else:
-                try:
-                    user_obj = await self.bot.fetch_user(int(user_id))
-                    name = user_obj.name  # fallback to username (not nickname)
-                except:
-                    name = "Unknown"
-
+            name = await get_name(interaction, user.user_id)
             rows.append((name, user.snipes, user.times_sniped, score))
         print("rows: ", rows)
 
@@ -79,20 +70,102 @@ class Leaderboard(commands.Cog):
         if not data["users"].items():
             await interaction.response.send_message("No users in the game!")
 
-        for user_id, user in data["users"].items():
-            member = interaction.guild.get_member(int(user_id))
-            if member:
-                name = member.display_name
-            else:
-                try:
-                    user_obj = await self.bot.fetch_user(int(user_id))
-                    name = user_obj.name  # fallback to username (not nickname)
-                except:
-                    name = "Unknown"
+        for user in data:
+            name = await get_name(interaction, user.user_id)
             rows.append(name)
 
         rows.sort()
-        output = "```Player Name\n" + "\n".join(rows) + "\n```"
+        output = "```PLAYER NAME:\n" + "\n".join(rows) + "\n```"
+        await interaction.response.send_message(output)
+
+
+    @app_commands.command(name="listsnipes", description="Lists snipes")
+    @app_commands.describe(number_of_snipes="Select the number of snipes you wish to view")
+    async def list_snipes(self, interaction: discord.Interaction, number_of_snipes: int = 10):
+        """
+        Command to list snipes
+
+        Args:
+            number_of_snipes: number of snipes to show, counting from the most recent snipe
+
+        Returns:
+            List of snipes in codeblock format
+        """
+
+        guild_id = interaction.guild.id 
+
+        data = get_snipes_from_guild(guild_id)
+        snipes = data[0]
+        snipe_count = data[1]
+
+        rows = []
+        if not snipes:
+            await interaction.response.send_message("No snipes in the game!")
+            return
+        
+        number_of_snipes = min(number_of_snipes, len(snipes))
+
+        for i in range (number_of_snipes):
+            index = snipe_count - number_of_snipes + i
+            snipe: Snipe = snipes[i]
+            sniper = await get_name(interaction, snipe.sniper_id)
+            target = await get_name(interaction, snipe.target_id)
+            rows.append((index, sniper, target, snipe.timestamp))
+        print("rows: ", rows)
+
+        table = []
+        header = f"{'Snipe':<6} {'Sniper':>20} {'Target':>20} {'Time':>20}"
+        table.append(header)
+        table.append("-" * len(header))
+        for index, sniper, target, timestamp in rows:
+            table.append(f"{index:<6} {sniper:>20}, {target:>20} {timestamp:>20}")
+        print(table)
+        output = "```SNIPES:\n" + "\n".join(table) + "\n```"
+        await interaction.response.send_message(output)
+
+
+    @app_commands.command(name="listsnipes", description="Lists snipes")
+    @app_commands.describe(number_of_snipes="Select the number of snipes you wish to view")
+    async def list_snipes(self, interaction: discord.Interaction, number_of_snipes: int = 10):
+        """
+        Command to list snipes
+
+        Args:
+            number_of_snipes: number of snipes to show, counting from the most recent snipe
+
+        Returns:
+            List of snipes in codeblock format
+        """
+
+        guild_id = interaction.guild.id 
+
+        data = get_snipes_from_guild(guild_id)
+        snipes = data[0]
+        snipe_count = data[1]
+
+        rows = []
+        if not snipes:
+            await interaction.response.send_message("No snipes in the game!")
+            return
+        
+        number_of_snipes = min(number_of_snipes, len(snipes))
+
+        for i in range (number_of_snipes):
+            index = snipe_count - number_of_snipes + i
+            snipe: Snipe = snipes[i]
+            sniper = await get_name(interaction, snipe.sniper_id)
+            target = await get_name(interaction, snipe.target_id)
+            rows.append((index, sniper, target, snipe.timestamp))
+        print("rows: ", rows)
+
+        table = []
+        header = f"{'Snipe':<6} {'Sniper':>20} {'Target':>20} {'Time':>20}"
+        table.append(header)
+        table.append("-" * len(header))
+        for index, sniper, target, timestamp in rows:
+            table.append(f"{index:<6} {sniper:>20}, {target:>20} {timestamp:>20}")
+        print(table)
+        output = "```text\n" + "\n".join(table) + "\n```"
         await interaction.response.send_message(output)
 
 
