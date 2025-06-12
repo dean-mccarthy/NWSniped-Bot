@@ -41,22 +41,40 @@ def get_players_from_guild(guild_id):
     data = db.users.find({"guild_id": guild_id})
     return [User.from_dict(user) for user in data]
 
-def update_snipes(guild_id, sniper_id, target_id):
+def update_snipes(guild_id, sniper_id, target_id, increment: bool):
+    value = 1.0 if increment else -1.0 # used for incrementing or decrementing snipes
+    print(value)
     db.users.update_one( # update sniper
         {"guild_id": guild_id, "_id": sniper_id},
-        {"$inc": {"snipes": 1.0}}
+        {"$inc": {"snipes": value}}
         )
     db.users.update_one( # update target
         {"guild_id": guild_id, "_id": target_id},
-        {"$inc": {"times_sniped": 1.0}}
+        {"$inc": {"times_sniped": value}}
         )
-    snipe = Snipe(guild_id, sniper_id, target_id)
-    db.snipes.insert_one(snipe.to_dict()) # add snipe to collection
+    
+    if increment: 
+        snipe = Snipe(guild_id, sniper_id, target_id)
+        db.snipes.insert_one(snipe.to_dict()) # add snipe to collection
+
 
 def get_snipes_from_guild(guild_id, limit):
     data = db.snipes.find({"guild_id": guild_id}).sort("timestamp", -1).limit(limit)
-    count = db.snipes.count({"guild_id": guild_id})
-    return [Snipe.from_dict(snipe) for snipe in data], count
+    count = db.snipes.count_documents({"guild_id": guild_id})
+    return ([Snipe.from_dict(snipe) for snipe in reversed(list(data))], count)
+
+def remove_snipe(guild_id, index) -> bool:
+    snipes = list(db.snipes.find({"guild_id": guild_id}).sort("timestamp", 1))
+    if index < 1 or index > len(snipes):
+        return False
+    del_snipe = snipes[index - 1]
+    target_id = del_snipe["target_id"]
+    sniper_id = del_snipe["sniper_id"]
+    update_snipes(guild_id, sniper_id, target_id, False)
+
+    db.snipes.delete_one({"_id": del_snipe["_id"]})
+    return True
+
 
 def reset_snipes(guild_id):
     db.snipes.remove({"guild_id": guild_id})

@@ -7,11 +7,11 @@
 - [x] Implement point counting
 - [x] Implement settings/config file
 - [x] Implement leaderboard
+- [x] Implement list_snipes
 - [ ] Implement image verification for snipes (attach image check)
-- [ ] Implement acheivements
+- [ ] Implement achievements
 - [ ] Implement safe windows
 - [ ] Implement Snipeception
-- [ ] Implement list_snipes
 
 ## Data Management
 - [x] Store game data in server-specific JSON files

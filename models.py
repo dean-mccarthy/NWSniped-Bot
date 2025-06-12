@@ -6,8 +6,8 @@ from zoneinfo import ZoneInfo
 class User:
     user_id: int # discord id used for _id in Mongo
     guild_id: int
-    snipes: float = 0.0
-    times_sniped: float = 0.0
+    snipes: int = 0
+    times_sniped: int = 0
     achievements: list[str] = None
 
     @staticmethod
@@ -15,8 +15,8 @@ class User:
         return User(
             user_id=data["_id"],
             guild_id=data["guild_id"],
-            snipes=data.get("snipes", 0.0),
-            times_sniped=data.get("times_sniped", 0.0),
+            snipes=data.get("snipes", 0),
+            times_sniped=data.get("times_sniped", 0),
             achievements=data.get("achievements", []) or []
         )
 

@@ -6,6 +6,7 @@ import os
 from dotenv import load_dotenv
 from util_db import *
 from typing import Literal
+from datetime import datetime
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -137,37 +138,45 @@ class Leaderboard(commands.Cog):
         Returns:
             List of snipes in codeblock format
         """
-
+        # print("Listing Snipes")
         guild_id = interaction.guild.id 
 
-        data = get_snipes_from_guild(guild_id)
-        snipes = data[0]
-        snipe_count = data[1]
-
+        snipes, snipe_count = get_snipes_from_guild(guild_id, number_of_snipes)
+        # print(snipes)
         rows = []
         if not snipes:
             await interaction.response.send_message("No snipes in the game!")
             return
-        
         number_of_snipes = min(number_of_snipes, len(snipes))
-
-        for i in range (number_of_snipes):
+        
+        for i in range (1, number_of_snipes+1):
             index = snipe_count - number_of_snipes + i
-            snipe: Snipe = snipes[i]
+            snipe: Snipe = snipes[i-1]
             sniper = await get_name(interaction, snipe.sniper_id)
             target = await get_name(interaction, snipe.target_id)
-            rows.append((index, sniper, target, snipe.timestamp))
-        print("rows: ", rows)
+            time = datetime.fromisoformat(snipe.timestamp).strftime("%b %d %I:%M %p")
+            rows.append((index, sniper, target, time))
+        # print("rows: ", rows)
 
         table = []
         header = f"{'Snipe':<6} {'Sniper':>20} {'Target':>20} {'Time':>20}"
         table.append(header)
         table.append("-" * len(header))
         for index, sniper, target, timestamp in rows:
-            table.append(f"{index:<6} {sniper:>20}, {target:>20} {timestamp:>20}")
-        print(table)
-        output = "```text\n" + "\n".join(table) + "\n```"
+            table.append(f"{index:<6} {sniper:>20} {target:>20} {timestamp:>20}")
+        # print(table)
+        output = "```SNIPES:\n" + "\n".join(table) + "\n```"
         await interaction.response.send_message(output)
+
+    @app_commands.command(name="deletesnipe", description="Deletes the selected snipe")
+    @app_commands.describe(snipe_number="Select the snipe you want to remove")
+    async def delete_snipe(self, interaction: discord.Interaction, snipe_number: int):
+        guild_id = interaction.guild.id
+        result = remove_snipe(guild_id, snipe_number)
+        if not result:
+            await interaction.response.send_message("Please select a valid snipe", ephemeral=True)
+            return
+        await interaction.response.send_message(f"Snipe {snipe_number} successfully deleted!", ephemeral=True)
 
 
 
