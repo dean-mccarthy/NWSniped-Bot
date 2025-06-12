@@ -55,7 +55,7 @@ def add_player_helper(guild_id: int, player: discord.Member):
         return ("Game is not initialized!", False)
         
     data = load_data(guild_id)
-    user_id = str(player.id)
+    user_id = player.id
 
     if user_id in data["users"]:
         return (f"{player.display_name} is already registered.", True)

@@ -35,7 +35,7 @@ def save_player(player: User):
     )
 
 def remove_player(guild_id, player_id):
-    db.users.remove({"guild_id": guild_id, "_id": player_id})
+    db.users.delete_one({"guild_id": guild_id, "_id": player_id})
 
 def get_players_from_guild(guild_id):
     data = db.users.find({"guild_id": guild_id})
@@ -67,13 +67,34 @@ def remove_snipe(guild_id, index) -> bool:
     snipes = list(db.snipes.find({"guild_id": guild_id}).sort("timestamp", 1))
     if index < 1 or index > len(snipes):
         return False
-    del_snipe = snipes[index - 1]
-    target_id = del_snipe["target_id"]
-    sniper_id = del_snipe["sniper_id"]
-    update_snipes(guild_id, sniper_id, target_id, False)
+    del_data = snipes[index - 1]
+    del_snipe = Snipe.from_dict(del_data)
+    update_snipes(guild_id, del_snipe.sniper_id, del_snipe.target_id, False)
 
-    db.snipes.delete_one({"_id": del_snipe["_id"]})
+    db.snipes.delete_one({"_id": del_data["_id"]})
     return True
+
+def remove_snipes_from_player(guild_id, player_id):
+    snipes_against = [Snipe.from_dict(snipe) for snipe in db.snipes.find({"guild_id": guild_id, "target_id": player_id})]
+
+    for snipe in snipes_against:
+        db.users.update_one( # update target
+        {"guild_id": guild_id, "_id": snipe.sniper_id},
+        {"$inc": {"snipes": -1}}
+        )
+
+    snipes_by_player = [Snipe.from_dict(snipe) for snipe in db.snipes.find({"guild_id": guild_id, "sniper_id": player_id})]
+
+    for snipe in snipes_by_player:
+        db.users.update_one( # update target
+        {"guild_id": guild_id, "_id": snipe.target_id},
+        {"$inc": {"times_sniped": -1}}
+        )
+
+    db.snipes.delete_many({
+        "guild_id": guild_id,
+        "$or": [{"target_id": player_id}, {"sniper_id": player_id}]
+    })
 
 
 def reset_snipes(guild_id):
@@ -81,7 +102,7 @@ def reset_snipes(guild_id):
 
 def reset_players(guild_id):
     db.users.update_many(
-        {"guild_id": str(guild_id)},
+        {"guild_id": guild_id},
         {
             "$set": {
                 "snipes": 0.0,

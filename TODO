@@ -15,16 +15,17 @@
 
 ## Data Management
 - [x] Store game data in server-specific JSON files
-- [ ] Remove invalid snipe
+- [x] Remove invalid snipe
 
 ## UX Improvements
 - [ ] Make bot request confirmation from players players when or sniped
 - [ ] Add check for most commands to ensure game is initialized
 
 ## Admin Commands
-- [ ] Add /resetgame or /endgame
-- [ ] Add /removeperson from game
+- [x] Add /resetgame
+- [x] Add /removeplayer from game
 - [x] Add /settings to adjust settings
+- [ ] Add /endgame
 - [ ] Add role based command restrictions
 
 # Last updated: 2025-06-05

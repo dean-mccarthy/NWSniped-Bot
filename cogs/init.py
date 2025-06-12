@@ -70,42 +70,46 @@ class Init(commands.Cog):
         await interaction.response.send_message(result[0], ephemeral=result[1])
         return
     
-    @app_commands.command(name="removeplayer", description="Remove a player from the game")
+    @app_commands.command(name="removeplayer", description="Remove a player from the game, also removes all snipes related to player")
     @app_commands.describe(player="Select the player to remove")
     async def remove_player(self, interaction: discord.Interaction, player: discord.Member):
         """
         Command to remove player from game
 
         Removes a player from game and deletes all snipes related to them
+
+        Args:
+            player: discord.Member to remove from game
         """
         guild_id = interaction.guild.id
 
         if not get_player(guild_id, player.id):
             await interaction.response.send_message(f"{player.display_name} is not in the game.", ephemeral=True)
+            return
 
+        remove_snipes_from_player(guild_id, player.id)
         remove_player(guild_id, player.id)
-        # TODO: Remove snipes from player
 
         await interaction.response.send_message(f"{player.display_name} has been removed from the game.", ephemeral=True)
         
 
-    
-
-    @app_commands.command(name="resetgame", description="Resets the snipe game")
+    @app_commands.command(name="resetgame", description="Reset the snipes and config of the game, all players remain in the game")
     async def reset_game(self, interaction: discord.Interaction):
         """
         Command to reset game
 
-        Resets json file for current server
+        Resets snipes database for current server
+        Resets config
+        Resets all users to base values
         """
         guild_id = interaction.guild.id
         config = ServerConfig(guild_id=guild_id)
         save_config(config)
         reset_snipes(guild_id) # remove all snipes
+        reset_players(guild_id)
 
-        return
     
-    @app_commands.command(name="config", description="Adjusts the settings of the game")
+    @app_commands.command(name="config", description="View or adjust the settings of the game")
     async def config(self, interaction: discord.Interaction, setting: Literal["points_per_snipe", "penalty_per_snipe", "achievements_enabled"], value: str):
         guild_id = interaction.guild.id
         newConf = get_config(guild_id)
