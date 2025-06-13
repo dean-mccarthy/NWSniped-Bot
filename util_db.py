@@ -98,7 +98,7 @@ def remove_snipes_from_player(guild_id, player_id):
 
 
 def reset_snipes(guild_id):
-    db.snipes.remove({"guild_id": guild_id})
+    db.snipes.delete_many({"guild_id": guild_id})
 
 def reset_players(guild_id):
     db.users.update_many(
