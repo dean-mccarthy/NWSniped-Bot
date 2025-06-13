@@ -5,7 +5,7 @@ import os
 from models import *
 from dotenv import load_dotenv
 from util_db import *
-from typing import Literal
+from typing import Literal, Optional
 from views import *
 
 load_dotenv()
@@ -137,9 +137,19 @@ class Init(commands.Cog):
 
     
     @app_commands.command(name="config", description="View or adjust the settings of the game")
-    async def config(self, interaction: discord.Interaction, setting: Literal["points_per_snipe", "penalty_per_snipe", "achievements_enabled"], value: str):
+    async def config(self, interaction: discord.Interaction, setting: Optional[Literal["points_per_snipe", "penalty_per_snipe", "achievements_enabled"]] = None, value: Optional[str] = None):
         guild_id = interaction.guild.id
         newConf = get_config(guild_id)
+        if not setting:
+            await interaction.response.send_message(
+                f"**Current Config:**\n"
+                f"- Points per snipe: `{newConf.points_per_snipe}`\n"
+                f"- Penalty per snipe: `{newConf.penalty_per_snipe}`\n"
+                f"- Achievements enabled: `{newConf.achievements_enabled}`",
+                ephemeral=True
+            )
+            return
+
         match setting:
             case "points_per_snipe":
                 newConf.points_per_snipe = float(value)

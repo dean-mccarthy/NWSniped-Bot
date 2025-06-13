@@ -43,7 +43,7 @@ def get_players_from_guild(guild_id):
 
 def update_snipes(guild_id, sniper_id, target_id, increment: bool):
     value = 1.0 if increment else -1.0 # used for incrementing or decrementing snipes
-    print(value)
+    # print(value)
     db.users.update_one( # update sniper
         {"guild_id": guild_id, "_id": sniper_id},
         {"$inc": {"snipes": value}}
