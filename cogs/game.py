@@ -46,7 +46,7 @@ class Game(commands.Cog):
 
         update_snipes(guild_id, sniper_id, target_id, True)
         message = get_snipe_message(interaction.user, player) #uses raw discord members since mention needs discord ids instead of strings
-        print(message)
+        # print(message)
         await interaction.response.send_message(message)
 
 
