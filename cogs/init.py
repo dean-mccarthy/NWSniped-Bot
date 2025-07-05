@@ -1,10 +1,12 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
+from discord.app_commands import check
 import os
 from models import *
 from dotenv import load_dotenv
-from util_db import *
+from utils.util_db import *
+from utils.utils_checks import *
 from typing import Literal
 
 load_dotenv()
@@ -55,6 +57,7 @@ class Init(commands.Cog):
 
     @app_commands.command(name="addplayer", description="Register a player in the snipe game")
     @app_commands.describe(player="Select the player to add")
+    @check(check_initialized)
     async def add_player(self, interaction: discord.Interaction, player: discord.Member):
         guild_id = interaction.guild.id
 
@@ -63,6 +66,7 @@ class Init(commands.Cog):
         return
     
     @app_commands.command(name="joingame", description="Register yourself in the snipe game")
+    @check(check_initialized)
     async def join_game(self, interaction: discord.Interaction):
         guild_id = interaction.guild.id
 
@@ -72,6 +76,7 @@ class Init(commands.Cog):
     
     @app_commands.command(name="removeplayer", description="Remove a player from the game, also removes all snipes related to player")
     @app_commands.describe(player="Select the player to remove")
+    @check(check_initialized)
     async def remove_player(self, interaction: discord.Interaction, player: discord.Member):
         """
         Command to remove player from game
@@ -94,6 +99,7 @@ class Init(commands.Cog):
         
 
     @app_commands.command(name="resetgame", description="Reset the snipes and config of the game, all players remain in the game")
+    @check(check_initialized)
     async def reset_game(self, interaction: discord.Interaction):
         """
         Command to reset game
@@ -110,6 +116,7 @@ class Init(commands.Cog):
 
     
     @app_commands.command(name="config", description="View or adjust the settings of the game")
+    @check(check_initialized)
     async def config(self, interaction: discord.Interaction, setting: Literal["points_per_snipe", "penalty_per_snipe", "achievements_enabled"], value: str):
         guild_id = interaction.guild.id
         newConf = get_config(guild_id)

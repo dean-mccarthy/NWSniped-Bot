@@ -115,9 +115,7 @@ def reset_players(guild_id):
     
 
 def add_player_helper(guild_id: int, player: discord.Member):
-    if not get_config(guild_id):
-        return ("Game is not initialized!", False)
-        
+    
     user_id = player.id
     if get_player(guild_id, user_id):
         return (f"{player.display_name} is already registered.", True)

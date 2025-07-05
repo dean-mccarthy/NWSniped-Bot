@@ -2,9 +2,11 @@ import random
 import discord
 from discord import app_commands
 from discord.ext import commands
+from discord.app_commands import check
 import os
 from dotenv import load_dotenv
-from util_db import *
+from utils.util_db import *
+from utils.utils_checks import *
 from typing import Literal
 from datetime import datetime
 
@@ -17,6 +19,7 @@ class Leaderboard(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="leaderboard", description="Show the leaderboard")
+    @check(check_initialized)
     async def showleaderboard(self, interaction: discord.Interaction, sort_by: Literal["name", "score", "snipes", "times_sniped"] = "score", sort_direction: Literal["Highest First", "Lowest First"] = "Highest First"):
         """
         Command called to generate current leaderboard in chat
@@ -56,6 +59,7 @@ class Leaderboard(commands.Cog):
         await interaction.response.send_message(output)
 
     @app_commands.command(name="listplayers", description="Lists all registered players")
+    @check(check_initialized)
     async def list_players(self, interaction: discord.Interaction):
         """
         Command to list all players
@@ -83,6 +87,7 @@ class Leaderboard(commands.Cog):
 
     @app_commands.command(name="listsnipes", description="Lists snipes")
     @app_commands.describe(number_of_snipes="Select the number of snipes you wish to view")
+    @check(check_initialized)
     async def list_snipes(self, interaction: discord.Interaction, number_of_snipes: int = 10):
         """
         Command to list snipes
@@ -128,6 +133,7 @@ class Leaderboard(commands.Cog):
 
     @app_commands.command(name="listsnipes", description="Lists snipes")
     @app_commands.describe(number_of_snipes="Select the number of snipes you wish to view")
+    @check(check_initialized)
     async def list_snipes(self, interaction: discord.Interaction, number_of_snipes: int = 10):
         """
         Command to list snipes
@@ -170,6 +176,7 @@ class Leaderboard(commands.Cog):
 
     @app_commands.command(name="deletesnipe", description="Deletes the selected snipe")
     @app_commands.describe(snipe_number="Select the snipe you want to remove")
+    @check(check_initialized)
     async def delete_snipe(self, interaction: discord.Interaction, snipe_number: int):
         guild_id = interaction.guild.id
         result = remove_snipe(guild_id, snipe_number)
@@ -177,7 +184,6 @@ class Leaderboard(commands.Cog):
             await interaction.response.send_message("Please select a valid snipe", ephemeral=True)
             return
         await interaction.response.send_message(f"Snipe {snipe_number} successfully deleted!", ephemeral=True)
-
 
 
 async def setup(bot: commands.Bot):

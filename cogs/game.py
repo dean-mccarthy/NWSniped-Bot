@@ -2,9 +2,11 @@ import random
 import discord
 from discord import app_commands
 from discord.ext import commands
+from discord.app_commands import check
 import os
 from dotenv import load_dotenv
-from util_db import *
+from utils.util_db import *
+from utils.utils_checks import *
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -16,6 +18,7 @@ class Game(commands.Cog):
 
     @app_commands.command(name="snipe", description="Snipe a player!")
     @app_commands.describe(player="Select the player to snipe")
+    @check(check_initialized)
     async def snipe(self, interaction: discord.Interaction, player: discord.Member):
         """
         Command called when player wishes to submit a snipe of another player

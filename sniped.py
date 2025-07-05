@@ -3,6 +3,8 @@ import discord
 import asyncio
 from dotenv import load_dotenv
 from discord.ext import commands
+from discord import app_commands
+from utils.utils_checks import *
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -24,6 +26,16 @@ class MyBot(commands.Bot):
                     print(f"Loaded extension: {filename}")
                 except Exception as e:
                     print(f"Failed to load {filename}: {e}")
+        
+        self.tree.on_error = self.on_app_command_error
+
+    async def on_app_command_error(self, interaction: discord, error: app_commands.AppCommandError):
+        # print(f"[Error] Command: {interaction.command.name}, User: {interaction.user}, Guild: {interaction.guild}")
+        if isinstance(error, GameNotInitialized):
+            await safe_send(interaction, str(error))
+        else:
+            await safe_send(interaction, "An unexpected error occurred.")
+            raise error
 
 bot = MyBot(command_prefix='/', intents=intents, application_id=APPLICATION_ID)
 
