@@ -9,6 +9,7 @@ from utils.util_db import *
 from utils.utils_checks import *
 from typing import Literal
 from datetime import datetime
+from views import *
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -36,13 +37,13 @@ class Leaderboard(commands.Cog):
         if not players:
             await interaction.response.send_message("No users in the game!")
 
-        print("Players:", players)
+        # print("Players:", players)
 
         for user in players:
             score = (user.snipes * config.points_per_snipe) - (user.times_sniped * config.penalty_per_snipe)
             name = await get_name(interaction, user.user_id)
             rows.append((name, user.snipes, user.times_sniped, score))
-        print("rows: ", rows)
+        # print("rows: ", rows)
 
         sort_index = {"name": 0, "snipes": 1, "times_sniped": 2, "score": 3}[sort_by]
         rows.sort(key=lambda x: x[sort_index], reverse= sort_direction == "Highest First")
@@ -50,11 +51,11 @@ class Leaderboard(commands.Cog):
         table = []
         header = f"{'Name':<20} {'Snipes':>6} {'Times sniped':>13} {'Score':>6}"
         table.append(header)
-        print(table)
+        # print(table)
         table.append("-" * len(header))
         for name, snipes, sniped, score in rows:
             table.append(f"{name:<20} {snipes:>6.0f} {sniped:>13.0f} {score:>6.1f}")
-        print(table)
+        # print(table)
         output = "```text\n" + "\n".join(table) + "\n```"
         await interaction.response.send_message(output)
 

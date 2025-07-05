@@ -12,17 +12,21 @@ If you run into any issues or have ideas for additional features please message 
     penalty_per_snipe: 1.0
     acheivements_enabled: True
 
-`/config`: Change the settings to suit your game  
+`/config`: View or change the settings of your game 
 `/resetgame`: Reset all game data and settings for your server  
 `/addplayer`: Add a player to the game  
 `/joingame`: Add yourself to the game
+`/removeplayer`: Remove a player and all snipes related to them
 
 ### Gameplay:
 `/snipe`: Snipe a player!
+`/deletesnipe`: Remove an invalid snipe
 
 ### Other Commands:
 `/leaderboard`: Show the current points leaderboard  
 `/listplayers`: List all players in the game
+`/listsnipes`: List a number of recent snipes
+
 
 
 ## How To Play
@@ -57,6 +61,16 @@ Take pictures of other players without them knowing and try to avoid getting pic
 
 ## Version Changelog
 
+### V1.2
+- Added removeplayer
+- Added deletesnipe
+- Fixed resetgame
+- /config now shows current configuration when no arguments passed
+- Removals now require confirmation
+
+
 ### V1.1
 - Converted all data storage from JSON to MongoDB
+
+
 

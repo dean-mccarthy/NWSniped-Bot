@@ -7,7 +7,8 @@ from models import *
 from dotenv import load_dotenv
 from utils.util_db import *
 from utils.utils_checks import *
-from typing import Literal
+from typing import Literal, Optional
+from views import *
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -91,11 +92,23 @@ class Init(commands.Cog):
         if not get_player(guild_id, player.id):
             await interaction.response.send_message(f"{player.display_name} is not in the game.", ephemeral=True)
             return
+        view = ConfirmDeleteView()
+        await interaction.response.send_message(
+            f"Are you sure you want to remove {player.display_name}? This action cannot be undone.",
+            view=view,
+            ephemeral=True
+        )
+        await view.wait()
 
-        remove_snipes_from_player(guild_id, player.id)
-        remove_player(guild_id, player.id)
+        if view.confirmed is True:
+            remove_snipes_from_player(guild_id, player.id)
+            remove_player(guild_id, player.id)
+            await interaction.followup.send(f"{player.display_name} has been removed from the game.", ephemeral=True)
+        elif view.confirmed is False:
+            await interaction.followup.send("Player removal was cancelled.", ephemeral=True)
+        else:
+            await interaction.followup.send("Player removal timed out with no response.", ephemeral=True)
 
-        await interaction.response.send_message(f"{player.display_name} has been removed from the game.", ephemeral=True)
         
 
     @app_commands.command(name="resetgame", description="Reset the snipes and config of the game, all players remain in the game")
@@ -110,9 +123,23 @@ class Init(commands.Cog):
         """
         guild_id = interaction.guild.id
         config = ServerConfig(guild_id=guild_id)
-        save_config(config)
-        reset_snipes(guild_id) # remove all snipes
-        reset_players(guild_id)
+        view = ConfirmDeleteView()
+        await interaction.response.send_message(
+            "Are you sure you want to reset the game? This action cannot be undone.",
+            view=view,
+            ephemeral=True
+        )
+        await view.wait()
+
+        if view.confirmed is True:
+            save_config(config)
+            reset_snipes(guild_id)
+            reset_players(guild_id)
+            await interaction.followup.send("Game has been reset.", ephemeral=True)
+        elif view.confirmed is False:
+            await interaction.followup.send("Reset was cancelled.", ephemeral=True)
+        else:
+            await interaction.followup.send("Reset timed out with no response.", ephemeral=True)
 
     
     @app_commands.command(name="config", description="View or adjust the settings of the game")
@@ -120,6 +147,16 @@ class Init(commands.Cog):
     async def config(self, interaction: discord.Interaction, setting: Literal["points_per_snipe", "penalty_per_snipe", "achievements_enabled"], value: str):
         guild_id = interaction.guild.id
         newConf = get_config(guild_id)
+        if not setting:
+            await interaction.response.send_message(
+                f"**Current Config:**\n"
+                f"- Points per snipe: `{newConf.points_per_snipe}`\n"
+                f"- Penalty per snipe: `{newConf.penalty_per_snipe}`\n"
+                f"- Achievements enabled: `{newConf.achievements_enabled}`",
+                ephemeral=True
+            )
+            return
+
         match setting:
             case "points_per_snipe":
                 newConf.points_per_snipe = float(value)
