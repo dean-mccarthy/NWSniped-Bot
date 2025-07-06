@@ -52,6 +52,12 @@ async def on_ready():
         print(f"- {cmd.name}")
 
 
+@bot.event
+async def on_guild_join(guild: discord.Guild):
+    await make_role(guild)
+
+
+
 async def main():
     async with bot:
         await bot.start(TOKEN)

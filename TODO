@@ -21,8 +21,8 @@
 
 ## UX Improvements
 - [ ] Make bot request confirmation from players players when or sniped
-- [ ] Add check for most commands to ensure game is initialized
-- [ ] Allow /config to view current settings
+- [x] Add check for most commands to ensure game is initialized
+- [x] Allow /config to view current settings
 
 ## Admin Commands
 - [x] Add /resetgame
