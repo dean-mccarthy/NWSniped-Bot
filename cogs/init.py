@@ -38,6 +38,7 @@ class Init(commands.Cog):
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.command(name="initgame", description="Initialize the snipe game")
+    @check(check_perms)
     async def init_game(self, interaction: discord.Interaction):
         """
         Command to initialize game
@@ -58,6 +59,7 @@ class Init(commands.Cog):
 
     @app_commands.command(name="addplayer", description="Register a player in the snipe game")
     @app_commands.describe(player="Select the player to add")
+    @check(check_perms)
     @check(check_initialized)
     async def add_player(self, interaction: discord.Interaction, player: discord.Member):
         guild_id = interaction.guild.id
@@ -77,6 +79,7 @@ class Init(commands.Cog):
     
     @app_commands.command(name="removeplayer", description="Remove a player from the game, also removes all snipes related to player")
     @app_commands.describe(player="Select the player to remove")
+    @check(check_perms)
     @check(check_initialized)
     async def remove_player(self, interaction: discord.Interaction, player: discord.Member):
         """
@@ -112,6 +115,7 @@ class Init(commands.Cog):
         
 
     @app_commands.command(name="resetgame", description="Reset the snipes and config of the game, all players remain in the game")
+    @check(check_perms)
     @check(check_initialized)
     async def reset_game(self, interaction: discord.Interaction):
         """
@@ -143,6 +147,7 @@ class Init(commands.Cog):
 
     
     @app_commands.command(name="config", description="View or adjust the settings of the game")
+    @check(check_perms)
     @check(check_initialized)
     async def config(self, interaction: discord.Interaction, setting: Literal["points_per_snipe", "penalty_per_snipe", "achievements_enabled"], value: str):
         guild_id = interaction.guild.id

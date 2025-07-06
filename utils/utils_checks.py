@@ -7,6 +7,9 @@ from utils.util_db import get_config
 class GameNotInitialized(CheckFailure):
     pass
 
+class MissingControlRole(CheckFailure):
+    pass
+
 async def check_initialized(interaction: Interaction):
     if not interaction.guild:
         raise GameNotInitialized("Guild not found")
@@ -15,6 +18,12 @@ async def check_initialized(interaction: Interaction):
     if not config:
         raise GameNotInitialized("Game is not Initialized!")
     return True
+
+async def check_perms(interaction: Interaction):
+    allowed_roles = {"Sniped Control", "Admin"}
+    if any(role.name in allowed_roles for role in interaction.user.roles):
+        return True
+    raise MissingControlRole("You don't have permission to use this command.")
 
 async def safe_send(interaction: Interaction, content: str, ephemeral: bool = True):
     try:

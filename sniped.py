@@ -33,6 +33,8 @@ class MyBot(commands.Bot):
         # print(f"[Error] Command: {interaction.command.name}, User: {interaction.user}, Guild: {interaction.guild}")
         if isinstance(error, GameNotInitialized):
             await safe_send(interaction, str(error))
+        if isinstance(error, MissingControlRole):
+            await safe_send(interaction, str(error))
         else:
             await safe_send(interaction, "An unexpected error occurred.")
             raise error
