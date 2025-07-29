@@ -18,6 +18,7 @@
 - [x] Store game data in server-specific JSON files
 - [x] Convert JSON to MongoDB storage
 - [x] Remove invalid snipe
+- [ ] Dockerize and send to GCloud
 
 ## UX Improvements
 - [ ] Make bot request confirmation from players players when or sniped

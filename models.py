@@ -1,6 +1,24 @@
 from dataclasses import dataclass, asdict
 from datetime import datetime
 from zoneinfo import ZoneInfo
+from typing import List, Tuple
+
+@dataclass
+class SafeTime:
+    day: str
+    start_time: str
+    end_time: str
+
+    def to_dict(self):
+        return asdict(self)
+
+    @staticmethod
+    def from_dict(data: dict):
+        return SafeTime(
+            day=data["day"],
+            start_time=data["start_time"],
+            end_time=data["end_time"]
+        )
 
 @dataclass
 class User:
@@ -32,18 +50,22 @@ class ServerConfig:
     points_per_snipe: float = 1.0
     penalty_per_snipe: float = 1.0
     achievements_enabled: bool = True
+    safe_times: List[SafeTime] = None # (day, start_time, end_time)
 
     def to_dict(self):
         data = asdict(self)
         data["_id"] = data.pop("guild_id")
+        data["safe_times"] = [st.to_dict() for st in self.safe_times] if self.safe_times else []
         return data
+    
     @staticmethod
     def from_dict(data: dict):
         return ServerConfig(
             guild_id=data["_id"],
             points_per_snipe=data.get("points_per_snipe", 1.0),
             penalty_per_snipe=data.get("penalty_per_snipe", 1.0),
-            achievements_enabled=data.get("achievements_enabled", True)
+            achievements_enabled=data.get("achievements_enabled", True),
+            safe_times=[SafeTime.from_dict(st) for st in data.get("safe_times", [])]
         )
     
 
@@ -65,3 +87,4 @@ class Snipe:
             target_id=data["target_id"],
             timestamp=data.get("timestamp", datetime.utcnow().isoformat())
         )
+    

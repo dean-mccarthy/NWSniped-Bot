@@ -1,4 +1,5 @@
 import asyncio
+from datetime import datetime
 from discord import Interaction
 import discord
 from discord.app_commands import CheckFailure
@@ -36,7 +37,7 @@ async def safe_send(interaction: Interaction, content: str, ephemeral: bool = Tr
 
 
 
-async def make_role(guild: discord.Guild):
+async def make_role(guild: discord.Guild) -> discord.Role | None:
     await asyncio.sleep(2)
     print(f"Bot permissions in {guild.name}: {guild.me.guild_permissions}")
     role_name = "Sniped Control"
@@ -45,7 +46,7 @@ async def make_role(guild: discord.Guild):
     existing_role = discord.utils.get(guild.roles, name=role_name)
     if existing_role:
         print(f"Role '{role_name}' already exists in {guild.name}")
-        return
+        return existing_role
 
     try:
 
@@ -59,6 +60,17 @@ async def make_role(guild: discord.Guild):
         if owner:
             await owner.add_roles(new_role, reason="Auto-granted Sniped Control to server owner")
             print(f"✅ Assigned '{role_name}' to {owner.display_name} in {guild.name}")
+        
+        return new_role
             
     except Exception as e:
         print(f"Failed to create role in {guild.name}: {e}")
+        return None
+
+
+async def validate_time_format(timestr: str) -> bool:
+    try:
+        datetime.strptime(timestr, "%H:%M")
+        return True
+    except ValueError:
+        return False

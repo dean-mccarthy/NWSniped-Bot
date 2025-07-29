@@ -24,7 +24,9 @@ class Init(commands.Cog):
 
     @app_commands.command(name="help", description="List all available commands")
     async def help(self, interaction:discord.Interaction):
-        embed = discord.Embed(title="Sniped Bot Help", description="Here are all of my commands:", color=discord.Color.blue())
+        embed = discord.Embed(title="Sniped Bot Help", description="", color=discord.Color.blue())
+        embed.add_field(name="To get started, use /initgame to start the game!", value="", inline=False)
+        embed.add_field(name="Here are all of my commands:", value="", inline=False)
 
         commands = sorted(self.bot.tree.get_commands(), key=lambda cmd:cmd.name)
 
@@ -145,42 +147,6 @@ class Init(commands.Cog):
         else:
             await interaction.followup.send("Reset timed out with no response.", ephemeral=True)
 
-    
-    @app_commands.command(name="config", description="View or adjust the settings of the game")
-    @check(check_perms)
-    @check(check_initialized)
-    async def config(self, interaction: discord.Interaction, setting: Literal["points_per_snipe", "penalty_per_snipe", "achievements_enabled"], value: str):
-        guild_id = interaction.guild.id
-        newConf = get_config(guild_id)
-        if not setting:
-            await interaction.response.send_message(
-                f"**Current Config:**\n"
-                f"- Points per snipe: `{newConf.points_per_snipe}`\n"
-                f"- Penalty per snipe: `{newConf.penalty_per_snipe}`\n"
-                f"- Achievements enabled: `{newConf.achievements_enabled}`",
-                ephemeral=True
-            )
-            return
-
-        match setting:
-            case "points_per_snipe":
-                newConf.points_per_snipe = float(value)
-                save_config(newConf)
-                await interaction.response.send_message(f"Points per snipe now set to {newConf.points_per_snipe}", ephemeral=True)
-                return
-            case "penalty_per_snipe":
-                newConf.penalty_per_snipe = float(value)
-                save_config(newConf)
-                await interaction.response.send_message(f"Penalty per snipe now set to {newConf.penalty_per_snipe}", ephemeral=True)
-                return
-            case "achievements_enabled":
-                if str(value) != "True" and str(value) != "False":
-                    await interaction.response.send_message("Achievements_enabled must be `True` or `False`", ephemeral=True)
-                    return
-                newConf.achievements_enabled = str(value) == "True"
-                save_config(newConf)
-                await interaction.response.send_message(f"Achievements are now {"enabled" if newConf.achievements_enabled else "disabled"}", ephemeral=True)
-                return
 
     
     
