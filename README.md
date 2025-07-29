@@ -1,31 +1,36 @@
-# UBC A Cappella Sniped Bot v1.1!
+# UBC A Cappella Sniped Bot v1.3!
 Welcome to the Discord Sniped Bot designed for use in UBC A Cappella!  
 This bot exists to facilitate gameplay by keeping track of scores, leaderboards, and acheivements.  
 If you run into any issues or have ideas for additional features please message me on discord: @oriose
 
 ## Features
+*Commands marked by * can only be used by users with the `@Sniped Control` role*
 ### Game Start:  
-`/help`: Lists all available commands  
-`/initgame`: Initializes game for the server, initial settings configuration are as such:  
+`/help` Lists all available commands  
+`/initgame`* Initializes game for the server, initial settings configuration are as such:  
 
     points_per_snipe: 1.0
     penalty_per_snipe: 1.0
     acheivements_enabled: True
+    safe_times: None
 
-`/config`: View or change the settings of your game 
-`/resetgame`: Reset all game data and settings for your server  
-`/addplayer`: Add a player to the game  
-`/joingame`: Add yourself to the game
-`/removeplayer`: Remove a player and all snipes related to them
+`/config`* View or change the settings of your game \
+`/safetime`* Add, remove, or view safetimes \
+`/resetgame`* Reset all game data and settings for your server  
+`/joingame` Add yourself to the game \
+`/addplayer`* Add a player to the game  
+`/removeplayer`* Remove a player and all snipes related to them
 
 ### Gameplay:
-`/snipe`: Snipe a player!
-`/deletesnipe`: Remove an invalid snipe
+`/snipe` Snipe a player! \
+`/deletesnipe`* Remove an invalid snipe 
 
-### Other Commands:
-`/leaderboard`: Show the current points leaderboard  
-`/listplayers`: List all players in the game
-`/listsnipes`: List a number of recent snipes
+### Leaderboard:
+`/leaderboard` Show the current points leaderboard  
+`/listplayers` List all players in the game \
+`/listsnipes` List a number of recent snipes
+
+### 
 
 
 
@@ -60,6 +65,11 @@ Take pictures of other players without them knowing and try to avoid getting pic
 
 
 ## Version Changelog
+### V1.3
+- Added control role: marked commands now require role to use
+- Added safety checks for init
+- Safetimes can now be added to config (they are not in use yet)
+
 
 ### V1.2
 - Added removeplayer

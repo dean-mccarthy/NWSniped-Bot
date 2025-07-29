@@ -30,6 +30,6 @@
 - [x] Add /removeplayer from game
 - [x] Add /settings to adjust settings
 - [ ] Add /endgame
-- [ ] Add role based command restrictions
+- [x] Add role based command restrictions
 
 # Last updated: 2025-06-05
