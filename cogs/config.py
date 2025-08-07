@@ -51,7 +51,7 @@ class Config(commands.Cog):
                 await interaction.response.send_message(f"Achievements are now {"enabled" if newConf.achievements_enabled else "disabled"}", ephemeral=True)
                 return
             
-    @app_commands.command(name="safetime", description="Add, remove, or view safetimes")
+    @app_commands.command(name="safetime", description="Add, or view safetimes")
     @app_commands.describe(day="Day of the week", start_time="Start time (HH:MM)", end_time="End time (HH:MM)")
     @check(check_perms)
     @check(check_initialized)
@@ -66,19 +66,22 @@ class Config(commands.Cog):
                 return
             
             rows = []
-            for safetime in times:
-                rows.append((days[safetime.day], safetime.start_time, safetime.end_time))
+            index = 1
+            sorted_times = sorted(times, key=lambda s: (s.day, s.start_time))
+
+            for safetime in sorted_times:
+                rows.append((index, days[safetime.day], safetime.start_time, safetime.end_time))
+                index += 1
                 
             table = []
-            header = f"{'Day':<10} {'Start Time':>10} {'End Time':>10}"
+            header = f"{'#':<3}{'Day':<10} {'Start Time':>10} {'End Time':>10}"
             table.append(header)
             table.append("-" * len(header))
-            for day, start, end in rows:
-                table.append(f"{day:<10} {start.strftime('%H:%M'):>10} {end.strftime('%H:%M'):>10}")
+            for num, day, start, end in rows:
+                table.append(f"{num:<3} {day:<10} {start.strftime('%H:%M'):>10} {end.strftime('%H:%M'):>10}")
             output = "```SAFETIMES:\n" + "\n".join(table) + "\n```"
             await interaction.response.send_message(output)
             return
-
 
 
         if not (start_time and end_time):
@@ -96,6 +99,26 @@ class Config(commands.Cog):
         newConf.safe_times.append(newSafeTime)
         save_config(newConf)
         await interaction.response.send_message("Safetime successfully added!", ephemeral=True)
+
+
+    @app_commands.command(name="removesafetime", description="Remove safetime")
+    @app_commands.describe(safetime="Index of safetime to remove")
+    @check(check_perms)
+    @check(check_initialized)
+    async def remove_safetime(self, interaction: discord.Interaction, safetime: int):
+        guild_id = interaction.guild.id
+        config = get_config(guild_id)
+        times = sorted(config.safe_times, key=lambda s: (s.day, s.start_time))
+        if safetime < 1 or safetime > len(times):
+            await interaction.response.send_message("Please select a valid safetime", ephemeral=True)
+            return 
+        
+        del times[safetime - 1]
+
+        config.safe_times = times
+        save_config(config)
+        await interaction.response.send_message("Safetime successfully removed!", ephemeral=True)
+        return
 
 
 
