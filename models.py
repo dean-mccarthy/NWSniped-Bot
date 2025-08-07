@@ -1,24 +1,37 @@
 from dataclasses import dataclass, asdict
-from datetime import datetime
+from datetime import datetime, time
 from zoneinfo import ZoneInfo
 from typing import List, Tuple
 
+PACIFIC = ZoneInfo("Canada/Pacific")
+
 @dataclass
 class SafeTime:
-    day: str
-    start_time: str
-    end_time: str
+    day: int #Monday = 0, Sunday = 6
+    start_time: time
+    end_time: time
 
     def to_dict(self):
-        return asdict(self)
+        return {
+            "day": self.day,
+            "start_time": self.start_time.isoformat(timespec="minutes"),
+            "end_time": self.end_time.isoformat(timespec="minutes")
+        }
 
     @staticmethod
     def from_dict(data: dict):
         return SafeTime(
             day=data["day"],
-            start_time=data["start_time"],
-            end_time=data["end_time"]
+            start_time=time.fromisoformat(data["start_time"]),
+            end_time=time.fromisoformat(data["end_time"])
         )
+    
+    def check_safe(self, now) -> bool:
+        local_time = now.astimezone(PACIFIC)
+
+        if local_time.weekday() != self.day:
+            return False
+        return self.start_time <= local_time.time() <= self.end_time
 
 @dataclass
 class User:

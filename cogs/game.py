@@ -19,6 +19,7 @@ class Game(commands.Cog):
     @app_commands.command(name="snipe", description="Snipe a player!")
     @app_commands.describe(player="Select the player to snipe")
     @check(check_initialized)
+    @check(check_safetime)
     async def snipe(self, interaction: discord.Interaction, player: discord.Member):
         """
         Command called when player wishes to submit a snipe of another player

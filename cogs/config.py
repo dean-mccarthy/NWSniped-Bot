@@ -56,24 +56,43 @@ class Config(commands.Cog):
     @check(check_perms)
     @check(check_initialized)
     async def safetime(self, interaction: discord.Interaction, day: Optional[Literal["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]] = None, start_time: Optional[str] = None, end_time: Optional[str] = None):
+        days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         guild_id = interaction.guild.id
         newConf = get_config(guild_id)
         if not day:
             times = newConf.safe_times
             if not times:
                 await interaction.response.send_message("No safetimes currently set!", ephemeral=True)
+                return
             
             rows = []
             for safetime in times:
-                rows.append(f"{safetime.day}: {safetime.start_time} → {safetime.end_time}")
+                rows.append((days[safetime.day], safetime.start_time, safetime.end_time))
+                
+            table = []
+            header = f"{'Day':<10} {'Start Time':>10} {'End Time':>10}"
+            table.append(header)
+            table.append("-" * len(header))
+            for day, start, end in rows:
+                table.append(f"{day:<10} {start.strftime('%H:%M'):>10} {end.strftime('%H:%M'):>10}")
+            output = "```SAFETIMES:\n" + "\n".join(table) + "\n```"
+            await interaction.response.send_message(output)
+            return
 
-        if not start_time and end_time:
+
+
+        if not (start_time and end_time):
             await interaction.response.send_message("Safetime must have a start and end time!", ephemeral=True)
-        
-        if not (await validate_time_format(start_time) and await validate_time_format(end_time)):
+            return
+        start = await validate_time_format(start_time)
+        end = await validate_time_format(end_time)
+        if not (start and end):
             await interaction.response.send_message("Start and end times must be in 24h HH:MM format - e.g. 17:45, 21:45", ephemeral=True)
+            return
 
-        newSafeTime = SafeTime(day, start_time, end_time)
+        days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        dayIndex = days.index(day)
+        newSafeTime = SafeTime(dayIndex, start, end)
         newConf.safe_times.append(newSafeTime)
         save_config(newConf)
         await interaction.response.send_message("Safetime successfully added!", ephemeral=True)

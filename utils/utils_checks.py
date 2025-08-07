@@ -1,14 +1,22 @@
 import asyncio
-from datetime import datetime
+from datetime import datetime, time
+from zoneinfo import ZoneInfo
 from discord import Interaction
 import discord
 from discord.app_commands import CheckFailure
 from utils.util_db import get_config
+from models import *
+
+PACIFIC = ZoneInfo("Canada/Pacific")
+
 
 class GameNotInitialized(CheckFailure):
     pass
 
 class MissingControlRole(CheckFailure):
+    pass
+
+class NowSafeTime(CheckFailure):
     pass
 
 async def check_initialized(interaction: Interaction):
@@ -70,7 +78,24 @@ async def make_role(guild: discord.Guild) -> discord.Role | None:
 
 async def validate_time_format(timestr: str) -> bool:
     try:
-        datetime.strptime(timestr, "%H:%M")
-        return True
+        time = datetime.strptime(timestr, "%H:%M").time()
+        return time
     except ValueError:
-        return False
+        return None
+    
+async def check_safetime(interaction: Interaction) -> bool:
+    guild_id = interaction.guild.id
+    config = get_config(guild_id)
+    if not config:
+        raise GameNotInitialized("Game is not Initialized!")
+    if not config.safe_times:
+        return True
+    now = datetime.now(PACIFIC)
+    # print(now)
+    # for safetime in config.safe_times:
+    #     print(safetime.start_time, safetime.end_time)
+    #     print(safetime.start_time <= now, safetime.end_time >= now)
+
+    if any (safetime.check_safe(now) for safetime in config.safe_times):
+        raise NowSafeTime("Cannot Snipe during a safetime!")
+    return True

@@ -35,6 +35,8 @@ class MyBot(commands.Bot):
             await safe_send(interaction, str(error))
         if isinstance(error, MissingControlRole):
             await safe_send(interaction, str(error))
+        if isinstance(error, NowSafeTime):
+            await safe_send(interaction, str(error))
         else:
             await safe_send(interaction, "An unexpected error occurred.")
             raise error

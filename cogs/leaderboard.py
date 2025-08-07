@@ -36,6 +36,7 @@ class Leaderboard(commands.Cog):
         rows = []
         if not players:
             await interaction.response.send_message("No users in the game!")
+            return
 
         # print("Players:", players)
 
@@ -76,6 +77,7 @@ class Leaderboard(commands.Cog):
         rows = []
         if not data:
             await interaction.response.send_message("No users in the game!")
+            return
 
         for user in data:
             name = await get_name(interaction, user.user_id)
@@ -126,7 +128,7 @@ class Leaderboard(commands.Cog):
         table.append(header)
         table.append("-" * len(header))
         for index, sniper, target, timestamp in rows:
-            table.append(f"{index:<6} {sniper:>20}, {target:>20} {timestamp:>20}")
+            table.append(f"{index:<6} {sniper:>20} {target:>20} {timestamp:>20}")
         print(table)
         output = "```SNIPES:\n" + "\n".join(table) + "\n```"
         await interaction.response.send_message(output)
