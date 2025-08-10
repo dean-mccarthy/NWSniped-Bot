@@ -80,7 +80,7 @@ class Config(commands.Cog):
             for num, day, start, end in rows:
                 table.append(f"{num:<3} {day:<10} {start.strftime('%H:%M'):>10} {end.strftime('%H:%M'):>10}")
             output = "```SAFETIMES:\n" + "\n".join(table) + "\n```"
-            await interaction.response.send_message(output)
+            await interaction.response.send_message(output, ephemeral=True)
             return
 
 
