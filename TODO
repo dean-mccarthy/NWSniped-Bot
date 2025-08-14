@@ -11,7 +11,7 @@
 - [x] Implement config view
 - [ ] Implement image verification for snipes (attach image check)
 - [ ] Implement achievements
-- [ ] Implement safe windows
+- [x] Implement safe windows
 - [ ] Implement Snipeception
 
 ## Data Management
@@ -21,7 +21,7 @@
 - [ ] Dockerize and send to GCloud
 
 ## UX Improvements
-- [ ] Make bot request confirmation from players players when or sniped
+- [x] Make bot request confirmation from players players when or sniped
 - [x] Add check for most commands to ensure game is initialized
 - [x] Allow /config to view current settings
 

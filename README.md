@@ -65,6 +65,10 @@ Take pictures of other players without them knowing and try to avoid getting pic
 
 
 ## Version Changelog
+### V1.4
+- Added confirmation message when sniped
+- Implemented safetime checks
+
 ### V1.3
 - Added control role: marked commands now require role to use
 - Added safety checks for init
