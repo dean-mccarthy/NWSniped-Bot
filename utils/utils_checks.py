@@ -32,7 +32,11 @@ async def check_perms(interaction: Interaction):
     allowed_roles = {"Sniped Control", "Admin"}
     if any(role.name in allowed_roles for role in interaction.user.roles):
         return True
+    
+    if ( interaction.user.id == interaction.guild.owner_id or interaction.user.guild_permissions.administrator):
+        return True
     raise MissingControlRole("You don't have permission to use this command.")
+
 
 async def safe_send(interaction: Interaction, content: str, ephemeral: bool = True):
     try:

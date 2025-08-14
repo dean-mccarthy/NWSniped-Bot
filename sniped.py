@@ -31,15 +31,11 @@ class MyBot(commands.Bot):
 
     async def on_app_command_error(self, interaction: discord, error: app_commands.AppCommandError):
         # print(f"[Error] Command: {interaction.command.name}, User: {interaction.user}, Guild: {interaction.guild}")
-        if isinstance(error, GameNotInitialized):
+        if isinstance(error, (GameNotInitialized, MissingControlRole, NowSafeTime, app_commands.CheckFailure)):
             await safe_send(interaction, str(error))
-        if isinstance(error, MissingControlRole):
-            await safe_send(interaction, str(error))
-        if isinstance(error, NowSafeTime):
-            await safe_send(interaction, str(error))
+            return
         else:
             await safe_send(interaction, "An unexpected error occurred.")
-            raise error
 
 bot = MyBot(command_prefix='/', intents=intents, application_id=APPLICATION_ID)
 

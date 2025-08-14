@@ -1,7 +1,8 @@
 from dataclasses import dataclass, asdict
 from datetime import datetime, time
 from zoneinfo import ZoneInfo
-from typing import List, Tuple
+from typing import List, Literal, Tuple
+from enum import Enum
 
 PACIFIC = ZoneInfo("Canada/Pacific")
 
@@ -87,6 +88,7 @@ class Snipe:
     guild_id: int
     sniper_id: int
     target_id: int
+    confirmed: bool = False
     timestamp: str = datetime.now(ZoneInfo("Canada/Pacific")).isoformat()
 
     def to_dict(self):
@@ -98,6 +100,9 @@ class Snipe:
             guild_id=data["guild_id"],
             sniper_id=data["sniper_id"],
             target_id=data["target_id"],
+            confirmed=data.get("confirmed", False),
             timestamp=data.get("timestamp", datetime.utcnow().isoformat())
         )
+    
+
     
