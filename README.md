@@ -65,17 +65,17 @@ Take pictures of other players without them knowing and try to avoid getting pic
 
 
 ## Version Changelog
-### V1.4
+### 0.4
 - Added confirmation message when sniped
 - Implemented safetime checks
 
-### V1.3
+### V0.3
 - Added control role: marked commands now require role to use
 - Added safety checks for init
 - Safetimes can now be added to config (they are not in use yet)
 
 
-### V1.2
+### V0.2
 - Added removeplayer
 - Added deletesnipe
 - Fixed resetgame
@@ -83,7 +83,7 @@ Take pictures of other players without them knowing and try to avoid getting pic
 - Removals now require confirmation
 
 
-### V1.1
+### V0.1
 - Converted all data storage from JSON to MongoDB
 
 
