@@ -3,8 +3,13 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 from models import *
 import os
+from dotenv import load_dotenv
 
-MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
+
+load_dotenv()
+MONGO_URI = os.getenv("MONGO_URI")
+if not MONGO_URI:
+    raise RuntimeError("MONGO_URI is not set! Check your .env or environment variables.")
 client = MongoClient(MONGO_URI)
 db = client["sniped_bot"]
 
