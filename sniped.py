@@ -56,13 +56,13 @@ async def on_ready():
 async def on_guild_join(guild: discord.Guild):
     role = await make_role(guild)
     if guild.system_channel and guild.system_channel.permissions_for(guild.me).send_messages:
-        await guild.system_channel.send(f"Thanks for inviting Sniped Bot! Use `/initgame` to get started.\n Please give the role {role.mention} to all game moderators")
+        await guild.system_channel.send(f"Thanks for inviting UBC ACA Sniped Bot! Use `/initgame` to get started.\n Please give the role {role.mention} to all game moderators")
         return
 
     # Fallback: try to find another text channel with permission
     for channel in guild.text_channels:
         if channel.permissions_for(guild.me).send_messages:
-            await channel.send(f"Thanks for inviting Sniped Bot! Use `/initgame` to get started.\n Please give the role {role.mention} to all game moderators")
+            await channel.send(f"Thanks for inviting UBC ACA Sniped Bot! Use `/initgame` to get started.\n Please give the role {role.mention} to all game moderators")
             break
 
 
