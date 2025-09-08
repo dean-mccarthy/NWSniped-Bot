@@ -8,7 +8,6 @@ from utils.utils_checks import *
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-SERVER_ID = int(os.getenv('SERVER_ID'))
 APPLICATION_ID = os.getenv('APPLICATION_ID')
 
 
@@ -42,11 +41,7 @@ bot = MyBot(command_prefix='/', intents=intents, application_id=APPLICATION_ID)
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user}')
-    guild = discord.Object(id=SERVER_ID)
-    # await bot.tree.clear_commands()
     await bot.tree.sync()
-    # await bot.tree.clear_commands(guild=guild)
-    # await bot.tree.sync(guild=guild)
     print("Synced commands:")
     for cmd in bot.tree.get_commands():
         print(f"- {cmd.name}")
