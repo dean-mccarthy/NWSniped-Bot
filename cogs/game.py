@@ -65,29 +65,30 @@ class Game(commands.Cog):
         
 
 async def send_snipe_confirmation(interaction: discord.Interaction, guild_id, target, snipe_id):
-    view = ConfirmSnipeView(guild_id, target)
-    msg = await interaction.followup.send(
-        f"{target.mention}, please confirm or deny the snipe",
-        view=view
-    )
-    await view.wait()
+    while True:
+        view = ConfirmSnipeView(guild_id, target)
+        msg = await interaction.followup.send(
+            f"{target.mention}, please confirm or deny the snipe",
+            view=view
+        )
+        await view.wait()
 
-    if view.confirmed is True:
-        confirm_snipe(snipe_id)
-        message = get_snipe_message(interaction.user, target, SayingsType.SNIPE)
-        await interaction.followup.send(message)
-        return
-    
-    elif view.confirmed is False:
-        remove_snipe_by_id(snipe_id)
-        message = get_snipe_message(interaction.user, target, SayingsType.DENY)
-        await interaction.followup.send(message)
-        return
-    
-    elif view.confirmed is None:
-        await msg.delete()
-        await send_snipe_confirmation(interaction, guild_id, target, snipe_id)
-        return
+        if view.confirmed is True:
+            confirm_snipe(snipe_id)
+            message = get_snipe_message(interaction.user, target, SayingsType.SNIPE)
+            await interaction.followup.send(message)
+            break
+        
+        elif view.confirmed is False:
+            remove_snipe_by_id(snipe_id)
+            message = get_snipe_message(interaction.user, target, SayingsType.DENY)
+            await interaction.followup.send(message)
+            break
+        
+        elif view.confirmed is None:
+            await msg.delete()
+    return
+            
 
 
 
