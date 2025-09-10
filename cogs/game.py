@@ -119,7 +119,7 @@ def get_snipe_message(sniper, target, type: SayingsType):
                 f"One shot, one kill. {sniper_mention} shot down {target_mention}.",
                 f"{sniper_mention} just made {target_mention} their latest highlight reel.",
                 
-                f"Silently and swiftly, {sniper_mention} took down {target_mention}.",
+                f"Silently but deadly, {sniper_mention} took down {target_mention}.",
                 f"{target_mention} just learned to check their six—thanks to {sniper_mention}.",
                 f"Sneaky little snipe by {sniper_mention} on {target_mention}.",
                 f"In the shadows, {sniper_mention} strikes. Farewell, {target_mention}.",
