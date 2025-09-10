@@ -86,7 +86,10 @@ async def send_snipe_confirmation(interaction: discord.Interaction, guild_id, ta
             break
         
         elif view.confirmed is None:
-            await msg.delete()
+            try:
+                await msg.delete()
+            except discord.NotFound:
+                pass
     return
             
 
