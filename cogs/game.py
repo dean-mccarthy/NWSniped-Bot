@@ -55,30 +55,39 @@ class Game(commands.Cog):
             return
 
         snipe_id = make_snipe(guild_id, sniper_id, target_id) # Init snipe
-
+        
         message = get_snipe_message(interaction.user, player, SayingsType.SUBMIT) #uses raw discord members for mention
         # print(message)
         await interaction.response.send_message(message)
 
-        view = ConfirmSnipeView(guild_id, player)
-        await interaction.followup.send(
-            f"{player.mention}, please confirm or deny the snipe",
-            view=view
-        )
-        await view.wait()
+        await send_snipe_confirmation(interaction, guild_id, player, snipe_id)
 
-        if view.confirmed is True:
-            confirm_snipe(snipe_id)
-            message = get_snipe_message(interaction.user, player, SayingsType.SNIPE)
-            await interaction.followup.send(message)
-            return
         
-        elif view.confirmed is False:
-            remove_snipe_by_id(snipe_id)
-            message = get_snipe_message(interaction.user, player, SayingsType.DENY)
-            await interaction.followup.send(message)
-            return
 
+async def send_snipe_confirmation(interaction: discord.Interaction, guild_id, target, snipe_id):
+    view = ConfirmSnipeView(guild_id, target)
+    msg = await interaction.followup.send(
+        f"{target.mention}, please confirm or deny the snipe",
+        view=view
+    )
+    await view.wait()
+
+    if view.confirmed is True:
+        confirm_snipe(snipe_id)
+        message = get_snipe_message(interaction.user, target, SayingsType.SNIPE)
+        await interaction.followup.send(message)
+        return
+    
+    elif view.confirmed is False:
+        remove_snipe_by_id(snipe_id)
+        message = get_snipe_message(interaction.user, target, SayingsType.DENY)
+        await interaction.followup.send(message)
+        return
+    
+    elif view.confirmed is None:
+        await msg.delete()
+        await send_snipe_confirmation(interaction, guild_id, target, snipe_id)
+        return
 
 
 

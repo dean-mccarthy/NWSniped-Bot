@@ -67,6 +67,9 @@ Take pictures of other players without them knowing and try to avoid getting pic
 
 
 ## Version Changelog
+### V1.1
+- Snipe confirmation message now resends every 2h
+
 ### V1.0
 - Game is ready to play!
 - Currently hosted on gcloud VM

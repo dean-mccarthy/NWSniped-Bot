@@ -24,7 +24,7 @@ class ConfirmDeleteView(View):
 
 
 class ConfirmSnipeView(View):
-    def __init__(self, guild_id: int, target: discord.Member, timeout=None):
+    def __init__(self, guild_id: int, target: discord.Member, timeout=7200):
         super().__init__(timeout=timeout)
         self.guild_id = guild_id
         self.target = target
@@ -41,6 +41,7 @@ class ConfirmSnipeView(View):
             return False
         return True
     
+
     @discord.ui.button(label="Confirm", style=discord.ButtonStyle.success)
     async def confirm(self, interaction: discord.Interaction, button: Button):
         for item in self.children:
