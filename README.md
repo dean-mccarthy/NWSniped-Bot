@@ -1,7 +1,9 @@
-# UBC A Cappella Sniped Bot v1.3!
+# UBC A Cappella Sniped Bot v1.0!
 Welcome to the Discord Sniped Bot designed for use in UBC A Cappella!  
 This bot exists to facilitate gameplay by keeping track of scores, leaderboards, and acheivements.  
 If you run into any issues or have ideas for additional features please message me on discord: @oriose
+
+To add the bot to your server, click this link here: [**Invite Bot!**](https://discord.com/oauth2/authorize?client_id=1361870886885527572&permissions=275146476608&scope=applications.commands+bot)
 
 ## Features
 *Commands marked by * can only be used by users with the `@Sniped Control` role*
@@ -65,7 +67,13 @@ Take pictures of other players without them knowing and try to avoid getting pic
 
 
 ## Version Changelog
-### 0.4
+### V1.0
+- Game is ready to play!
+- Currently hosted on gcloud VM
+- Updates to come with additional features!
+
+
+### V0.4
 - Added confirmation message when sniped
 - Implemented safetime checks
 
