@@ -20,6 +20,7 @@
 - [x] Remove invalid snipe
 - [ ] ~~Dockerize and send to GCloud~~
 - [x] Host on GCloud VM
+- [ ] Check for unconfirmed snipes on startup and reset timer
 
 ## UX Improvements
 - [x] Make bot request confirmation from players players when or sniped
