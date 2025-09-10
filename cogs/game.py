@@ -11,7 +11,6 @@ from views import *
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-SERVER_ID = int(os.getenv('SERVER_ID'))
 
 class SayingsType(Enum):
     SNIPE = "snipe"

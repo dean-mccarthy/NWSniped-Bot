@@ -5,10 +5,14 @@ from dotenv import load_dotenv
 from discord.ext import commands
 from discord import app_commands
 from utils.utils_checks import *
+import sys
+import threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
+sys.stdout.reconfigure(line_buffering=True)
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-SERVER_ID = int(os.getenv('SERVER_ID'))
 APPLICATION_ID = os.getenv('APPLICATION_ID')
 
 
@@ -42,11 +46,7 @@ bot = MyBot(command_prefix='/', intents=intents, application_id=APPLICATION_ID)
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user}')
-    guild = discord.Object(id=SERVER_ID)
-    # await bot.tree.clear_commands()
     await bot.tree.sync()
-    # await bot.tree.clear_commands(guild=guild)
-    # await bot.tree.sync(guild=guild)
     print("Synced commands:")
     for cmd in bot.tree.get_commands():
         print(f"- {cmd.name}")
@@ -56,13 +56,13 @@ async def on_ready():
 async def on_guild_join(guild: discord.Guild):
     role = await make_role(guild)
     if guild.system_channel and guild.system_channel.permissions_for(guild.me).send_messages:
-        await guild.system_channel.send(f"Thanks for inviting Sniped Bot! Use `/initgame` to get started.\n Please give the role {role.mention} to all game moderators")
+        await guild.system_channel.send(f"Thanks for inviting UBC ACA Sniped Bot! Use `/initgame` to get started.\n Please give the role {role.mention} to all game moderators")
         return
 
     # Fallback: try to find another text channel with permission
     for channel in guild.text_channels:
         if channel.permissions_for(guild.me).send_messages:
-            await channel.send(f"Thanks for inviting Sniped Bot! Use `/initgame` to get started.\n Please give the role {role.mention} to all game moderators")
+            await channel.send(f"Thanks for inviting UBC ACA Sniped Bot! Use `/initgame` to get started.\n Please give the role {role.mention} to all game moderators")
             break
 
 
@@ -70,6 +70,21 @@ async def on_guild_join(guild: discord.Guild):
 async def main():
     async with bot:
         await bot.start(TOKEN)
+
+
+#Testing for server health
+class HealthHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200); self.end_headers()
+        self.wfile.write(b"ok")
+
+def start_health_server():
+    port = int(os.getenv("PORT", "8080"))
+    httpd = HTTPServer(("0.0.0.0", port), HealthHandler)
+    httpd.serve_forever()
+
+threading.Thread(target=start_health_server, daemon=True).start()
+
 
 
 asyncio.run(main())
