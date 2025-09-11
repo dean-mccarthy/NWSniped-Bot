@@ -152,10 +152,13 @@ def add_player_helper(guild_id: int, player: discord.Member):
     return (f"{player.mention} has been added to the game!", False)
 
 async def get_name(bot: discord.Client, guild_id: int, player_id: int) -> str:
+    # print("finding name")
     guild  = await bot.fetch_guild(guild_id)
+    # print(guild)
     member = await guild.fetch_member(player_id)
+    # print(member, member.nick)
     if member:
-        return member.nick
+        return member.nick if member.nick else member.display_name
     try:
         user_obj = await bot.fetch_user(player_id)
         return user_obj.name  # fallback to username - not nickname

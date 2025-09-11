@@ -67,6 +67,12 @@ Take pictures of other players without them knowing and try to avoid getting pic
 
 
 ## Version Changelog
+### V1.1.1
+- Bug Fixes
+
+  - Players can now play on multiple different servers
+  - Player names now show as server nicknames where applicable
+
 ### V1.1
 - Snipe confirmation message now resends every 2h
 

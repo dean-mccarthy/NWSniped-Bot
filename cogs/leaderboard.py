@@ -80,7 +80,9 @@ class Leaderboard(commands.Cog):
 
         for user in data:
             name = await get_name(self.bot, guild_id, user.user_id)
+            # print(name)
             rows.append(name)
+            # print(rows)
 
         rows.sort()
         output = "```PLAYER NAME:\n" + "\n".join(rows) + "\n```"
