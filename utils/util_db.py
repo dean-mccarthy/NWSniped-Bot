@@ -26,21 +26,21 @@ def save_config(config: ServerConfig):
     )
 
 def get_player(guild_id, player_id):
-    data = db.users.find_one({"guild_id": guild_id, "_id":player_id})
+    data = db.users.find_one({"guild_id": guild_id, "user_id":player_id})
     # print("data", data)
     # if data:
     #     print("User: ", User.from_dict(data))
     return User.from_dict(data) if data else None
 
-def save_player(player: User):
+def save_player(player: User, guild_id):
     db.users.replace_one(
-        {"_id": player.user_id},
+        {"user_id": player.user_id, "guild_id": guild_id},
         player.to_dict(),
         upsert=True
     )
 
 def remove_player(guild_id, player_id):
-    db.users.delete_one({"guild_id": guild_id, "_id": player_id})
+    db.users.delete_one({"guild_id": guild_id, "user_id": player_id})
 
 def get_players_from_guild(guild_id):
     data = db.users.find({"guild_id": guild_id})
@@ -61,11 +61,11 @@ def confirm_snipe(snipe_id):
     target_id = snipe.target_id
     
     db.users.update_one( # update sniper
-        {"guild_id": guild_id, "_id": sniper_id},
+        {"guild_id": guild_id, "user_id": sniper_id},
         {"$inc": {"snipes": 1}}
         )
     db.users.update_one( # update target
-        {"guild_id": guild_id, "_id": target_id},
+        {"guild_id": guild_id, "user_id": target_id},
         {"$inc": {"times_sniped": 1}}
         )
     
@@ -88,11 +88,11 @@ def remove_snipe(guild_id, index) -> bool:
     del_snipe = Snipe.from_dict(del_data)
 
     db.users.update_one( # update sniper
-        {"guild_id": guild_id, "_id": del_snipe.sniper_id},
+        {"guild_id": guild_id, "user_id": del_snipe.sniper_id},
         {"$inc": {"snipes": -1}}
         )
     db.users.update_one( # update target
-        {"guild_id": guild_id, "_id": del_snipe.target_id},
+        {"guild_id": guild_id, "user_id": del_snipe.target_id},
         {"$inc": {"times_sniped": -1}}
         )
     
@@ -105,7 +105,7 @@ def remove_snipes_from_player(guild_id, player_id):
 
     for snipe in snipes_against:
         db.users.update_one( # update target
-        {"guild_id": guild_id, "_id": snipe.sniper_id},
+        {"guild_id": guild_id, "user_id": snipe.sniper_id},
         {"$inc": {"snipes": -1}}
         )
 
@@ -113,7 +113,7 @@ def remove_snipes_from_player(guild_id, player_id):
 
     for snipe in snipes_by_player:
         db.users.update_one( # update target
-        {"guild_id": guild_id, "_id": snipe.target_id},
+        {"guild_id": guild_id, "user_id": snipe.target_id},
         {"$inc": {"times_sniped": -1}}
         )
 
@@ -147,7 +147,7 @@ def add_player_helper(guild_id: int, player: discord.Member):
         return (f"{player.display_name} is already registered.", True)
 
     newPlayer = User(int(player.id), int(guild_id))
-    save_player(newPlayer)
+    save_player(newPlayer, guild_id)
 
     return (f"{player.mention} has been added to the game!", False)
 
