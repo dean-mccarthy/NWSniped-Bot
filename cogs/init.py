@@ -19,7 +19,11 @@ class Init(commands.Cog):
 
     @app_commands.command(name="ping", description="pongs")
     async def ping(self, interaction: discord.Interaction):
-        await interaction.response.send_message("Pong!")
+        file = discord.File("tong.jpg", filename="tong.jpg")
+        await interaction.response.send_message(
+        content="All hail father Reese, founder of SneakCore",
+        file=file
+    )
 
     @app_commands.command(name="help", description="List all available commands")
     async def help(self, interaction:discord.Interaction):
