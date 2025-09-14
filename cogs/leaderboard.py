@@ -41,7 +41,7 @@ class Leaderboard(commands.Cog):
 
         for user in players:
             score = (user.snipes * config.points_per_snipe) - (user.times_sniped * config.penalty_per_snipe)
-            name = await get_name(interaction, user.user_id)
+            name = await get_name(self.bot, guild_id, user.user_id)
             rows.append((name, user.snipes, user.times_sniped, score))
         # print("rows: ", rows)
 
@@ -79,8 +79,10 @@ class Leaderboard(commands.Cog):
             return
 
         for user in data:
-            name = await get_name(interaction, user.user_id)
+            name = await get_name(self.bot, guild_id, user.user_id)
+            # print(name)
             rows.append(name)
+            # print(rows)
 
         rows.sort()
         output = "```PLAYER NAME:\n" + "\n".join(rows) + "\n```"
@@ -117,8 +119,8 @@ class Leaderboard(commands.Cog):
         for i in range (number_of_snipes):
             index = snipe_count - number_of_snipes + i
             snipe: Snipe = snipes[i]
-            sniper = await get_name(interaction, snipe.sniper_id)
-            target = await get_name(interaction, snipe.target_id)
+            sniper = await get_name(self.bot, guild_id, snipe.sniper_id)
+            target = await get_name(self.bot, guild_id, snipe.target_id)
             rows.append((index, sniper, target, snipe.timestamp))
         print("rows: ", rows)
 
@@ -160,8 +162,8 @@ class Leaderboard(commands.Cog):
         for i in range (1, number_of_snipes+1):
             index = snipe_count - number_of_snipes + i
             snipe: Snipe = snipes[i-1]
-            sniper = await get_name(interaction, snipe.sniper_id)
-            target = await get_name(interaction, snipe.target_id)
+            sniper = await get_name(self.bot, guild_id, snipe.sniper_id)
+            target = await get_name(self.bot, guild_id, snipe.target_id)
             time = datetime.fromisoformat(snipe.timestamp).strftime("%b %d %I:%M %p")
             rows.append((index, sniper, target, time))
         # print("rows: ", rows)

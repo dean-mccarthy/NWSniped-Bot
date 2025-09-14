@@ -36,7 +36,7 @@ class SafeTime:
 
 @dataclass
 class User:
-    user_id: int # discord id used for _id in Mongo
+    user_id: int # discord id NOT USED for _id in Mongo
     guild_id: int
     snipes: int = 0
     times_sniped: int = 0
@@ -45,7 +45,7 @@ class User:
     @staticmethod
     def from_dict(data):
         return User(
-            user_id=data["_id"],
+            user_id=data["user_id"],
             guild_id=data["guild_id"],
             snipes=data.get("snipes", 0),
             times_sniped=data.get("times_sniped", 0),
@@ -54,7 +54,6 @@ class User:
 
     def to_dict(self):
         data = asdict(self)
-        data["_id"] = data.pop("user_id")
         return data
     
     
