@@ -64,6 +64,7 @@ class ServerConfig:
     penalty_per_snipe: float = 1.0
     achievements_enabled: bool = True
     safe_times: List[SafeTime] = None # (day, start_time, end_time)
+    paused: bool = False
 
     def to_dict(self):
         data = asdict(self)

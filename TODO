@@ -31,7 +31,8 @@
 - [x] Add /resetgame
 - [x] Add /removeplayer from game
 - [x] Add /settings to adjust settings
-- [ ] Add /endgame
+- [ ] Add /endgame or /pausegame
+- [ ] Add /rules
 - [x] Add role based command restrictions
 
 # Last updated: 2025-09-09
