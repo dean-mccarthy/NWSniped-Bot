@@ -52,7 +52,6 @@ Take pictures of other players without them knowing and try to avoid getting pic
 - If two or more players are together and send a snipe of the same target(s), only the first snipe sent will count
   - If two or more players are not together but happen to snipe the same target in the same location, they can all get the points
 - A snipe including multiple players together counts as +1 point for each target in the shot
-- +3 Points if you snipe someone while they are sniping someone else (snipeception -- not implemented yet)
 
 ### Safe Zones:
 - All Aca events are safe times

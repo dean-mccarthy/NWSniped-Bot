@@ -1,5 +1,5 @@
 from dataclasses import dataclass, asdict
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 from zoneinfo import ZoneInfo
 from typing import List, Literal, Tuple
 from enum import Enum
@@ -29,10 +29,14 @@ class SafeTime:
     
     def check_safe(self, now) -> bool:
         local_time = now.astimezone(PACIFIC)
+        buffer = timedelta(minutes=15)
 
         if local_time.weekday() != self.day:
             return False
-        return self.start_time <= local_time.time() <= self.end_time
+        
+        start_buf = datetime.combine(local_time.date(), self.start_time) - buffer
+        end_buf = datetime.combine(local_time.date(), self.end_time) + buffer
+        return start_buf <= local_time.time() <= end_buf
 
 @dataclass
 class User:
