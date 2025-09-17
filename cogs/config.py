@@ -148,6 +148,8 @@ class Config(commands.Cog):
             color=discord.Color.gold()
         )
 
+        await interaction.response.send_message(embed=embed)
+
 
 
 
