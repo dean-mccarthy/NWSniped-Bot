@@ -130,9 +130,11 @@ class Config(commands.Cog):
         readme_path = os.path.join(os.getcwd(), "Rules.md")
         if os.path.exists(readme_path):
             with open(readme_path, "r", encoding="utf-8") as f:
-                self.rules_text = f.read()
+                rules_text = f.read()
         else:
-            self.rules_text = "Rules file not found."
+            rules_text = "Rules file not found."
+
+        print(rules_text)
 
         text = rules_text[:3500]
 
@@ -141,7 +143,7 @@ class Config(commands.Cog):
                 f"- Points per snipe: `{config.points_per_snipe}`\n"
                 f"- Penalty per snipe: `{config.penalty_per_snipe}`"
             )
-        
+        print(text)
         embed = discord.Embed(
             title="Game Rules",
             description=text[:4000],

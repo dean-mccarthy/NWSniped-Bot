@@ -9,6 +9,7 @@ To add the bot to your server, click this link here: [**Invite Bot!**](https://d
 *Commands marked by * can only be used by users with the `@Sniped Control` role*
 ### Game Start:  
 `/help` Lists all available commands  
+`/rules` Lists the rules of the game as NWC plays (adjust to your liking)
 `/initgame`* Initializes game for the server, initial settings configuration are as such:  
 
     points_per_snipe: 1.0
