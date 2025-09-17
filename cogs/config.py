@@ -119,6 +119,37 @@ class Config(commands.Cog):
         save_config(config)
         await interaction.response.send_message("Safetime successfully removed!", ephemeral=True)
         return
+    
+    @app_commands.command(name="rules", description="Displays the rules of the game")
+    @check(check_initialized)
+    async def rules(self, interaction: discord.Interaction):
+        guild_id = interaction.guild.id
+        config = get_config(guild_id)
+
+        rules_text = None
+        readme_path = os.path.join(os.getcwd(), "Rules.md")
+        if os.path.exists(readme_path):
+            with open(readme_path, "r", encoding="utf-8") as f:
+                self.rules_text = f.read()
+        else:
+            self.rules_text = "Rules file not found."
+
+        text = rules_text[:3500]
+
+        text += (
+                "\n\n**Current Scoring:**\n"
+                f"- Points per snipe: `{config.points_per_snipe}`\n"
+                f"- Penalty per snipe: `{config.penalty_per_snipe}`"
+            )
+        
+        embed = discord.Embed(
+            title="Game Rules",
+            description=text[:4000],
+            color=discord.Color.gold()
+        )
+
+
+
 
 
 
