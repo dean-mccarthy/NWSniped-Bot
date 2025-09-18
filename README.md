@@ -7,7 +7,8 @@ To add the bot to your server, click this link here: [**Invite Bot!**](https://d
 
 ## Features
 *Commands marked by * can only be used by users with the `@Sniped Control` role*
-Try `/ping` to get used to the commands!
+
+**Try `/ping` to get used to the commands!**
 ### Game Start:  
 `/help` Lists all available commands  
 `/rules` Lists the rules of the game as NWC plays (adjust to your liking)
