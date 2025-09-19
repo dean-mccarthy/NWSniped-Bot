@@ -62,6 +62,46 @@ class Game(commands.Cog):
 
         await send_snipe_confirmation(interaction, guild_id, player, snipe_id)
 
+    @app_commands.command(name="snipeception", description="Snipe a player while they are sniping another player")
+    @app_commands.describe(player="Select the player to snipeception")
+    @check(check_initialized)
+    @check(check_safetime)
+    async def snipeception(self, interaction: discord.Interaction, player: discord.Member):
+        """
+        Command called when player wishes to submit a snipe of another player
+        Game rules indicate an image must precede or follow this command featuring the snipe
+
+        Args:
+            player (discord.Member): The target being sniped
+
+        Returns:
+            Message in chat announcing the snipe
+            Snipe is recorded into datafiles
+            TODO: Ephemeral message to the target requesting confirmation of snipe
+        """
+        guild_id = interaction.guild.id
+        target_id = player.id
+        sniper_id = interaction.user.id
+
+        if target_id == sniper_id:
+            await interaction.response.send_message("You can't snipe yourself!", ephemeral=True)
+            return
+        if not get_player(guild_id, sniper_id):
+            await interaction.response.send_message("You are not in the game!", ephemeral=True)
+            return
+
+        if not get_player(guild_id, target_id):
+            await interaction.response.send_message(f"{player.display_name} is not in the game!", ephemeral=True)
+            return
+
+        snipe_id = make_snipe(guild_id, sniper_id, target_id) # Init snipe
+        
+        message = get_snipe_message(interaction.user, player, SayingsType.SUBMIT) #uses raw discord members for mention
+        # print(message)
+        await interaction.response.send_message(message)
+
+        await send_snipe_confirmation(interaction, guild_id, player, snipe_id)
+
         
 
 async def send_snipe_confirmation(interaction: discord.Interaction, guild_id, target, snipe_id):

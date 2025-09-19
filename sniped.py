@@ -39,7 +39,7 @@ class MyBot(commands.Bot):
             await safe_send(interaction, str(error))
             return
         else:
-            await safe_send(interaction, "An unexpected error occurred.")
+            await safe_send(interaction, str(error))
 
 bot = MyBot(command_prefix='/', intents=intents, application_id=APPLICATION_ID)
 

@@ -27,6 +27,7 @@ class Leaderboard(commands.Cog):
         Returns:
             Message in chat with current leaderboard
         """
+        await interaction.response.send_message("Loading Leaderboard...")
         guild_id = interaction.guild.id 
 
         players = get_players_from_guild(guild_id)
@@ -57,7 +58,7 @@ class Leaderboard(commands.Cog):
             table.append(f"{name:<20} {snipes:>6.0f} {sniped:>13.0f} {score:>6.1f}")
         # print(table)
         output = "```text\n" + "\n".join(table) + "\n```"
-        await interaction.response.send_message(output)
+        await interaction.followup.send(output)
 
     @app_commands.command(name="listplayers", description="Lists all registered players")
     @check(check_initialized)
@@ -104,6 +105,8 @@ class Leaderboard(commands.Cog):
         """
 
         guild_id = interaction.guild.id 
+        await interaction.response.send_message("Loading player list...")
+
 
         data = get_snipes_from_guild(guild_id)
         snipes = data[0]
@@ -132,7 +135,7 @@ class Leaderboard(commands.Cog):
             table.append(f"{index:<6} {sniper:>20} {target:>20} {timestamp:>20}")
         print(table)
         output = "```SNIPES:\n" + "\n".join(table) + "\n```"
-        await interaction.response.send_message(output)
+        await interaction.followup.send(output)
 
 
     @app_commands.command(name="listsnipes", description="Lists snipes")
