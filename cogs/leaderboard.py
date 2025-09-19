@@ -35,7 +35,7 @@ class Leaderboard(commands.Cog):
 
         rows = []
         if not players:
-            await interaction.response.send_message("No users in the game!")
+            await interaction.followup.send("No users in the game!")
             return
 
         # print("Players:", players)
@@ -69,6 +69,7 @@ class Leaderboard(commands.Cog):
         Returns:
             List of all players in codeblock format
         """
+        await interaction.response.send_message("Loading players...")
 
         guild_id = interaction.guild.id 
 
@@ -76,7 +77,7 @@ class Leaderboard(commands.Cog):
 
         rows = []
         if not data:
-            await interaction.response.send_message("No users in the game!")
+            await interaction.followup.send("No users in the game!")
             return
 
         for user in data:
@@ -87,56 +88,7 @@ class Leaderboard(commands.Cog):
 
         rows.sort()
         output = "```PLAYER NAME:\n" + "\n".join(rows) + "\n```"
-        await interaction.response.send_message(output)
-
-
-    @app_commands.command(name="listsnipes", description="Lists snipes")
-    @app_commands.describe(number_of_snipes="Select the number of snipes you wish to view")
-    @check(check_initialized)
-    async def list_snipes(self, interaction: discord.Interaction, number_of_snipes: int = 10):
-        """
-        Command to list snipes
-
-        Args:
-            number_of_snipes: number of snipes to show, counting from the most recent snipe
-
-        Returns:
-            List of snipes in codeblock format
-        """
-
-        guild_id = interaction.guild.id 
-        await interaction.response.send_message("Loading player list...")
-
-
-        data = get_snipes_from_guild(guild_id)
-        snipes = data[0]
-        snipe_count = data[1]
-
-        rows = []
-        if not snipes:
-            await interaction.response.send_message("No snipes in the game!")
-            return
-        
-        number_of_snipes = min(number_of_snipes, len(snipes))
-
-        for i in range (number_of_snipes):
-            index = snipe_count - number_of_snipes + i
-            snipe: Snipe = snipes[i]
-            sniper = await get_name(self.bot, guild_id, snipe.sniper_id)
-            target = await get_name(self.bot, guild_id, snipe.target_id)
-            rows.append((index, sniper, target, snipe.timestamp))
-        print("rows: ", rows)
-
-        table = []
-        header = f"{'Snipe':<6} {'Sniper':>20} {'Target':>20} {'Time':>20}"
-        table.append(header)
-        table.append("-" * len(header))
-        for index, sniper, target, timestamp in rows:
-            table.append(f"{index:<6} {sniper:>20} {target:>20} {timestamp:>20}")
-        print(table)
-        output = "```SNIPES:\n" + "\n".join(table) + "\n```"
         await interaction.followup.send(output)
-
 
     @app_commands.command(name="listsnipes", description="Lists snipes")
     @app_commands.describe(number_of_snipes="Select the number of snipes you wish to view")
@@ -152,13 +104,16 @@ class Leaderboard(commands.Cog):
             List of snipes in codeblock format
         """
         # print("Listing Snipes")
-        guild_id = interaction.guild.id 
+
+        await interaction.response.send_message("Loading snipes...")
+
+        guild_id = interaction.guild.id
 
         snipes, snipe_count = get_snipes_from_guild(guild_id, number_of_snipes)
         # print(snipes)
         rows = []
         if not snipes:
-            await interaction.response.send_message("No snipes in the game!")
+            await interaction.followup.send("No snipes in the game!")
             return
         number_of_snipes = min(number_of_snipes, len(snipes))
         
@@ -179,7 +134,7 @@ class Leaderboard(commands.Cog):
             table.append(f"{index:<6} {sniper:>20} {target:>20} {timestamp:>20}")
         # print(table)
         output = "```SNIPES:\n" + "\n".join(table) + "\n```"
-        await interaction.response.send_message(output)
+        await interaction.followup.send(output)
 
     @app_commands.command(name="deletesnipe", description="Deletes the selected snipe")
     @app_commands.describe(snipe_number="Select the snipe you want to remove")
