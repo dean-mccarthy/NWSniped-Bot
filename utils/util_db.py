@@ -4,7 +4,7 @@ from bson.objectid import ObjectId
 from models import *
 import os
 from dotenv import load_dotenv
-
+from datetime import datetime
 
 load_dotenv()
 MONGO_URI = os.getenv("MONGO_URI")
@@ -47,7 +47,7 @@ def get_players_from_guild(guild_id):
     return [User.from_dict(user) for user in data]
 
 def make_snipe(guild_id, sniper_id, target_id):
-    snipe = Snipe(guild_id, sniper_id, target_id, False)
+    snipe = Snipe(guild_id, sniper_id, target_id, False, datetime.now(ZoneInfo("Canada/Pacific")).isoformat())
     snipe_db = db.snipes.insert_one(snipe.to_dict())
     return snipe_db.inserted_id
 

@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from datetime import datetime, time, timedelta
 from zoneinfo import ZoneInfo
 from typing import List, Literal, Tuple
@@ -93,7 +93,7 @@ class Snipe:
     sniper_id: int
     target_id: int
     confirmed: bool = False
-    timestamp: str = datetime.now(ZoneInfo("Canada/Pacific")).isoformat()
+    timestamp: str = field(default_factory=lambda: datetime.now(ZoneInfo("Canada/Pacific")).isoformat())
 
     def to_dict(self):
         return asdict(self)
@@ -105,7 +105,7 @@ class Snipe:
             sniper_id=data["sniper_id"],
             target_id=data["target_id"],
             confirmed=data.get("confirmed", False),
-            timestamp=data.get("timestamp", datetime.utcnow().isoformat())
+            timestamp=data.get("timestamp")
         )
     
 
