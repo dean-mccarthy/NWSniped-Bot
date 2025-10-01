@@ -122,7 +122,7 @@ class Leaderboard(commands.Cog):
             snipe: Snipe = snipes[i-1]
             sniper = await get_name(self.bot, guild_id, snipe.sniper_id)
             target = await get_name(self.bot, guild_id, snipe.target_id)
-            time = datetime.fromisoformat(snipe.timestamp).strftime("%b %d %I:%M %p")
+            time = snipe.format_timestamp()
             rows.append((index, sniper, target, time))
         # print("rows: ", rows)
 

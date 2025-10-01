@@ -92,9 +92,9 @@ class Snipe:
     guild_id: int
     sniper_id: int
     target_id: int
+    channel: int
     confirmed: bool = False
     timestamp: str = field(default_factory=lambda: datetime.now(ZoneInfo("Canada/Pacific")).isoformat())
-    channel: int
 
     def to_dict(self):
         return asdict(self)
@@ -106,8 +106,13 @@ class Snipe:
             sniper_id=data["sniper_id"],
             target_id=data["target_id"],
             confirmed=data.get("confirmed", False),
-            timestamp=data.get("timestamp")
+            timestamp=data.get("timestamp"),
+            channel=data.get("channel"),
         )
+    
+    def format_timestamp(self) -> str:
+        dt = datetime.fromisoformat(self.timestamp).astimezone(ZoneInfo("Canada/Pacific"))
+        return dt.strftime("%b %d, %H:%M")
     
 
     

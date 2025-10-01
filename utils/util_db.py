@@ -46,8 +46,8 @@ def get_players_from_guild(guild_id):
     data = db.users.find({"guild_id": guild_id})
     return [User.from_dict(user) for user in data]
 
-def make_snipe(guild_id, sniper_id, target_id):
-    snipe = Snipe(guild_id, sniper_id, target_id, False, datetime.now(ZoneInfo("Canada/Pacific")).isoformat())
+def make_snipe(guild_id, sniper_id, target_id, channel_id):
+    snipe = Snipe(guild_id, sniper_id, target_id, channel_id, False, datetime.now(ZoneInfo("Canada/Pacific")).isoformat())
     snipe_db = db.snipes.insert_one(snipe.to_dict())
     return snipe_db.inserted_id
 
@@ -74,6 +74,9 @@ def confirm_snipe(snipe_id):
 def remove_snipe_by_id(snipe_id):
     db.snipes.delete_one({"_id": ObjectId(snipe_id)})
 
+def get_snipe_by_id(snipe_id):
+    snipe_data = db.snipes.find_one({"_id":snipe_id})
+    return Snipe.from_dict(snipe_data)
 
 def get_snipes_from_guild(guild_id, limit):
     data = db.snipes.find({"guild_id": guild_id, "confirmed": True}).sort("timestamp", -1).limit(limit)

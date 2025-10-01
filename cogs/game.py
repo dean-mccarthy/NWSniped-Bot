@@ -60,7 +60,7 @@ class Game(commands.Cog):
         # print(message)
         await interaction.response.send_message(message)
 
-        await send_snipe_confirmation(interaction, guild_id, player, snipe_id)
+        await send_snipe_confirmation(interaction.channel, guild_id, player, interaction.user, snipe_id)
 
     # @app_commands.command(name="snipeception", description="Snipe a player while they are sniping another player")
     # @app_commands.describe(player="Select the player to snipeception")
@@ -104,32 +104,34 @@ class Game(commands.Cog):
 
         
 
-async def send_snipe_confirmation(interaction: discord.Interaction, guild_id, target, snipe_id):
+async def send_snipe_confirmation(channel: discord.TextChannel, guild_id, target: discord.user, sniper: discord.user, snipe_id):
+    snipe = get_snipe_by_id(snipe_id)
     while True:
         view = ConfirmSnipeView(guild_id, target)
-        msg = await interaction.followup.send(
-            f"{target.mention}, please confirm or deny the snipe",
+        msg = await channel.send(
+            f"{target.mention}, please confirm or deny the snipe from {sniper.mention} on {snipe.format_timestamp()}",
             view=view
         )
         await view.wait()
 
         if view.confirmed is True:
             confirm_snipe(snipe_id)
-            message = get_snipe_message(interaction.user, target, SayingsType.SNIPE)
-            await interaction.followup.send(message)
+            message = get_snipe_message(sniper, target, SayingsType.SNIPE)
+            await channel.send(message)
             break
         
         elif view.confirmed is False:
             remove_snipe_by_id(snipe_id)
-            message = get_snipe_message(interaction.user, target, SayingsType.DENY)
-            await interaction.followup.send(message)
+            message = get_snipe_message(sniper, target, SayingsType.DENY)
+            await channel.send(message)
             break
-        
+
         elif view.confirmed is None:
             try:
                 await msg.delete()
-            except discord.NotFound:
+            except discord.NotFound():
                 pass
+            continue
     return
             
 

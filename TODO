@@ -18,9 +18,9 @@
 - [x] Store game data in server-specific JSON files
 - [x] Convert JSON to MongoDB storage
 - [x] Remove invalid snipe
-- [ ] ~~Dockerize and send to GCloud~~
-- [x] Host on GCloud VM
-- [ ] Check for unconfirmed snipes on startup and reset timer
+- [x] Dockerize and send to GCloud
+- [x] Host Mongo on GCloud VM
+- [ ] Check for unconfirmed snipes on startup and reset timer (run send confirm for all in msg)
 
 ## UX Improvements
 - [x] Make bot request confirmation from players players when or sniped
@@ -32,7 +32,7 @@
 - [x] Add /removeplayer from game
 - [x] Add /settings to adjust settings
 - [ ] Add /endgame or /pausegame
-- [ ] Add /rules
+- [x] Add /rules
 - [x] Add role based command restrictions
 
 # Last updated: 2025-09-09
