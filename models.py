@@ -94,6 +94,7 @@ class Snipe:
     target_id: int
     confirmed: bool = False
     timestamp: str = field(default_factory=lambda: datetime.now(ZoneInfo("Canada/Pacific")).isoformat())
+    channel: int
 
     def to_dict(self):
         return asdict(self)

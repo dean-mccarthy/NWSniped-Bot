@@ -94,12 +94,17 @@ async def check_safetime(interaction: Interaction) -> bool:
         raise GameNotInitialized("Game is not Initialized!")
     if not config.safe_times:
         return True
-    now = datetime.now(PACIFIC)
-    # print(now)
-    # for safetime in config.safe_times:
-    #     print(safetime.start_time, safetime.end_time)
-    #     print(safetime.start_time <= now, safetime.end_time >= now)
 
-    if any (safetime.check_safe(now) for safetime in config.safe_times):
-        raise NowSafeTime("Cannot Snipe during a safetime!")
+    now = datetime.now(PACIFIC)
+    weekday = now.weekday()
+
+    for safetime in config.safe_times:
+        if safetime.day != weekday:
+            continue
+
+        buffer = timedelta(minutes=15)
+        start_buf = datetime.combine(now.date(), safetime.start_time) - buffer
+        end_buf = datetime.combine(now.date(), safetime.end_time) + buffer
+        if start_buf <= now <= end_buf:
+            raise NowSafeTime("Cannot Snipe during a safetime!")
     return True
