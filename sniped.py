@@ -5,9 +5,11 @@ from dotenv import load_dotenv
 from discord.ext import commands
 from discord import app_commands
 from utils.utils_checks import *
+from utils.util_db import get_unconfirmed_snipes
 import sys
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from cogs.game import send_snipe_confirmation
 
 sys.stdout.reconfigure(line_buffering=True)
 
@@ -51,6 +53,8 @@ async def on_ready():
     for cmd in bot.tree.get_commands():
         print(f"- {cmd.name}")
 
+    await restart_unconfirmed_snipes()
+
 
 @bot.event
 async def on_guild_join(guild: discord.Guild):
@@ -66,10 +70,42 @@ async def on_guild_join(guild: discord.Guild):
             break
 
 
+async def restart_unconfirmed_snipes():
+    snipes = get_unconfirmed_snipes()
+    count = len(snipes)
+    for snipe_id, snipe in snipes:
+        if not snipe.channel:
+            print(f"Skipping snipe {snipe_id}: no channel available")
+            count -= 1 
+            continue
+
+        channel = bot.get_channel(snipe.channel)
+        if not channel:
+            print(f"Skipping snipe {snipe_id}: channel {snipe.channel} not found (probably left guild)")
+            count -= 1 
+            continue
+
+        try:
+            sniper = await bot.fetch_user(snipe.sniper_id)
+            target = await bot.fetch_user(snipe.target_id)
+        except Exception as e:
+            print(f"[restart_unconfirmed_snipes] Failed to fetch users for snipe {snipe_id}: {e}")
+            continue
+
+        asyncio.create_task(
+            send_snipe_confirmation(channel, snipe.guild_id, target, sniper, snipe_id),
+            name=f"snipe-confirm-{snipe_id}"
+        )
+    print(f"[restart_unconfirmed_snipes] Restarted {count} unconfirmed snipes")
+
+    return
+
+
 
 async def main():
     async with bot:
         await bot.start(TOKEN)
+
 
 
 #Testing for server health

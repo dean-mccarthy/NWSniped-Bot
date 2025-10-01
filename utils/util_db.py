@@ -78,6 +78,10 @@ def get_snipe_by_id(snipe_id):
     snipe_data = db.snipes.find_one({"_id":snipe_id})
     return Snipe.from_dict(snipe_data)
 
+def get_unconfirmed_snipes():
+    snipes = db.snipes.find({"confirmed": False})
+    return [(snipe["_id"], Snipe.from_dict(snipe)) for snipe in snipes]
+
 def get_snipes_from_guild(guild_id, limit):
     data = db.snipes.find({"guild_id": guild_id, "confirmed": True}).sort("timestamp", -1).limit(limit)
     count = db.snipes.count_documents({"guild_id": guild_id, "confirmed": True})
