@@ -70,6 +70,12 @@ Take pictures of other players without them knowing and try to avoid getting pic
 
 
 ## Version Changelog
+### V1.1.2
+- Bug Fixes
+
+  - Confirmation messages now resend every 2 hours
+  - Unconfirmed snipes now restart on bot reboot
+
 ### V1.1.1
 - Bug Fixes
 
