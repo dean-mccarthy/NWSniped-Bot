@@ -20,7 +20,8 @@
 - [x] Remove invalid snipe
 - [x] Dockerize and send to GCloud
 - [x] Host Mongo on GCloud VM
-- [ ] Check for unconfirmed snipes on startup and reset timer (run send confirm for all in msg)
+- [ ] Check for snipe existing ever time resend confirmation
+- [x] Check for unconfirmed snipes on startup and reset timer (run send confirm for all in msg)
 
 ## UX Improvements
 - [x] Make bot request confirmation from players players when or sniped
