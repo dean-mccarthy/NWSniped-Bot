@@ -105,11 +105,8 @@ class Game(commands.Cog):
         
 
 async def send_snipe_confirmation(channel: discord.TextChannel, guild_id, target: discord.user, sniper: discord.user, snipe_id):
+    snipe = get_snipe_by_id(snipe_id)
     while True:
-        snipe = get_snipe_by_id(snipe_id)
-        if not snipe:
-            break
-        
         view = ConfirmSnipeView(guild_id, target)
         msg = await channel.send(
             f"{target.mention}, please confirm or deny the snipe from {sniper.mention} on {snipe.format_timestamp()}",
