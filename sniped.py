@@ -107,20 +107,4 @@ async def main():
         await bot.start(TOKEN)
 
 
-
-#Testing for server health
-class HealthHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200); self.end_headers()
-        self.wfile.write(b"ok")
-
-def start_health_server():
-    port = int(os.getenv("PORT", "8080"))
-    httpd = HTTPServer(("0.0.0.0", port), HealthHandler)
-    httpd.serve_forever()
-
-threading.Thread(target=start_health_server, daemon=True).start()
-
-
-
 asyncio.run(main())
