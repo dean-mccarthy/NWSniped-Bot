@@ -97,7 +97,7 @@ async def check_safetime(interaction: Interaction) -> bool:
     if not config.safe_times:
         return True
 
-    now = datetime.now(PACIFIC)
+    now = datetime.now(PACIFIC).replace(tzinfo=None)
     weekday = now.weekday()
 
     for safetime in config.safe_times:
@@ -105,8 +105,8 @@ async def check_safetime(interaction: Interaction) -> bool:
             continue
 
         buffer = timedelta(minutes=15)
-        start_buf = datetime.combine(now.date(), safetime.start_time, tzinfo=PACIFIC) - buffer
-        end_buf = datetime.combine(now.date(), safetime.end_time, tzinfo=PACIFIC) + buffer
+        start_buf = datetime.combine(now.date(), safetime.start_time) - buffer
+        end_buf = datetime.combine(now.date(), safetime.end_time) + buffer
         if start_buf <= now <= end_buf:
             raise NowSafeTime("Cannot Snipe during a safetime!")
     return True
