@@ -89,6 +89,7 @@ async def validate_time_format(timestr: str) -> bool:
     
 async def check_safetime(interaction: Interaction) -> bool:
     guild_id = interaction.guild.id
+    interaction.response.send_message("Checking Safetimes")
     config = get_config(guild_id)
     if not config:
         raise GameNotInitialized("Game is not Initialized!")

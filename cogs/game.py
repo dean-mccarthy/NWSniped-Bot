@@ -44,21 +44,21 @@ class Game(commands.Cog):
         sniper_id = interaction.user.id
 
         if target_id == sniper_id:
-            await interaction.response.send_message("You can't snipe yourself!", ephemeral=True)
+            await safe_send(interaction, "You can't snipe yourself!", ephemeral=True)
             return
         if not get_player(guild_id, sniper_id):
-            await interaction.response.send_message("You are not in the game!", ephemeral=True)
+            await safe_send(interaction, "You are not in the game!", ephemeral=True)
             return
 
         if not get_player(guild_id, target_id):
-            await interaction.response.send_message(f"{player.display_name} is not in the game!", ephemeral=True)
+            await safe_send(interaction, f"{player.display_name} is not in the game!", ephemeral=True)
             return
 
         snipe_id = make_snipe(guild_id, sniper_id, target_id, interaction.channel_id) # Init snipe
         
         message = get_snipe_message(interaction.user, player, SayingsType.SUBMIT) #uses raw discord members for mention
         # print(message)
-        await interaction.response.send_message(message)
+        await safe_send(interaction, message, ephemeral=False)
 
         await send_snipe_confirmation(interaction.channel, guild_id, player, interaction.user, snipe_id)
 
