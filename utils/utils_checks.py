@@ -6,6 +6,7 @@ import discord
 from discord.app_commands import CheckFailure
 from utils.util_db import get_config
 from models import *
+import random
 
 PACIFIC = ZoneInfo("Canada/Pacific")
 
@@ -89,7 +90,7 @@ async def validate_time_format(timestr: str) -> bool:
     
 async def check_safetime(interaction: Interaction) -> bool:
     guild_id = interaction.guild.id
-    interaction.response.send_message("Checking Safetimes")
+    await interaction.response.send_message(get_init_saying(), ephemeral=True)
     config = get_config(guild_id)
     if not config:
         raise GameNotInitialized("Game is not Initialized!")
@@ -109,3 +110,23 @@ async def check_safetime(interaction: Interaction) -> bool:
         if start_buf <= now <= end_buf:
             raise NowSafeTime("Cannot Snipe during a safetime!")
     return True
+
+
+def get_init_saying():
+    sayings = [
+        "Aiming down sights...",
+        "Locking on target...",
+        "Loading round...",
+        "Tracking movement...",
+        "Lining up the shot...",
+        "Scope calibrated.",
+        "Sniper breathing steady...",
+        "Camouflage engaged...",
+        "Target acquired.",
+        "Finger on the trigger...",
+        "Weapon primed and ready.",
+        "Tactical advantage: established.",
+        "Snipe feed locked in.",
+        "Engaging sniping protocol..."
+    ]
+    return random.choice(sayings)
