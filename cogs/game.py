@@ -44,21 +44,21 @@ class Game(commands.Cog):
         sniper_id = interaction.user.id
 
         if target_id == sniper_id:
-            await interaction.response.send_message("You can't snipe yourself!", ephemeral=True)
+            await safe_send(interaction, "You can't snipe yourself!", ephemeral=True)
             return
         if not get_player(guild_id, sniper_id):
-            await interaction.response.send_message("You are not in the game!", ephemeral=True)
+            await safe_send(interaction, "You are not in the game!", ephemeral=True)
             return
 
         if not get_player(guild_id, target_id):
-            await interaction.response.send_message(f"{player.display_name} is not in the game!", ephemeral=True)
+            await safe_send(interaction, f"{player.display_name} is not in the game!", ephemeral=True)
             return
 
         snipe_id = make_snipe(guild_id, sniper_id, target_id, interaction.channel_id) # Init snipe
         
         message = get_snipe_message(interaction.user, player, SayingsType.SUBMIT) #uses raw discord members for mention
         # print(message)
-        await interaction.response.send_message(message)
+        await safe_send(interaction, message, ephemeral=False)
 
         await send_snipe_confirmation(interaction.channel, guild_id, player, interaction.user, snipe_id)
 
@@ -165,7 +165,12 @@ def get_snipe_message(sniper, target, type: SayingsType):
                 f"{target_mention} just learned to check their six—thanks to {sniper_mention}.",
                 f"Sneaky little snipe by {sniper_mention} on {target_mention}.",
                 f"In the shadows, {sniper_mention} strikes. Farewell, {target_mention}.",
-                f"{sniper_mention} says it's high noon. So long {target_mention}"
+                f"{sniper_mention} says it's high noon. So long {target_mention}",
+                f"Another confirmed frag for {sniper_mention}. RIP {target_mention}.",
+                f"{sniper_mention} hit the shot of the match on {target_mention}.",
+                f"{sniper_mention} pulled the trigger. {target_mention} disappeared.",
+                f"{sniper_mention} hit that shot on {target_mention} like it was personal.",
+                f"{sniper_mention} deleted {target_mention} from the feed.",
             ]
         
         case SayingsType.DENY:
@@ -176,6 +181,10 @@ def get_snipe_message(sniper, target, type: SayingsType):
                 f"Not today {sniper_mention}, not today --{target_mention}",
                 f"WOOOOOOSH! {sniper_mention} missed the shot on {target_mention}",
                 f"{target_mention} detonated spike before {sniper_mention} could clutch the ace"
+                f"{target_mention} escaped into the shadows — {sniper_mention} left guessing.",
+                f"Wind speed: 0. Excuses: 100. {sniper_mention} missed {target_mention}.",
+                f"{sniper_mention} tried... emphasis on tried.",
+                f"{sniper_mention} fumbled the bag — {target_mention} walked away clean.",
             ]
         
         case SayingsType.SUBMIT:
@@ -184,6 +193,10 @@ def get_snipe_message(sniper, target, type: SayingsType):
                 f"{target_mention}! {sniper_mention} on the rooftops!",
                 f"President {target_mention}, get down! {sniper_mention} is approaching!",
                 f"Shots fired at {target_mention} by {sniper_mention}",
+                f"{sniper_mention} is locking in on {target_mention}...",
+                f"{target_mention}, you've been spotted by {sniper_mention}!",
+                f"{sniper_mention} readies the trigger... {target_mention} might want to move.",
+                f"{sniper_mention} is watching from the shadows — {target_mention} beware.",
             ]
         
 

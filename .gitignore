@@ -4,3 +4,4 @@ __pycache__/
 node_modules
 data/config/*
 data/game/*
+.DS_Store

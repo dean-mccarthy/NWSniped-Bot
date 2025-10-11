@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: oriose
+      MONGO_INITDB_ROOT_PASSWORD: nwc
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+
+  sniped-bot:
+    build: .
+    container_name: sniped-bot
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+    environment:
+      # override MONGO_URI inside compose network
+      MONGO_URI: mongodb://oriose:nwc@mongo:27017/
+
+volumes:
+  mongo_data:
