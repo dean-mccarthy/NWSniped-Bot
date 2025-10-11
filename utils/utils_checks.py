@@ -126,7 +126,9 @@ def get_init_saying():
         "Finger on the trigger...",
         "Weapon primed and ready.",
         "Tactical advantage: established.",
-        "Snipe feed locked in.",
-        "Engaging sniping protocol..."
+        "Drone feed locked in.",
+        "Engaging sniping protocol...",
+        "Shots fired",
+        "Reloading",
     ]
     return random.choice(sayings)
