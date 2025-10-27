@@ -85,6 +85,13 @@ async def restart_unconfirmed_snipes():
             count -= 1 
             continue
 
+        me = channel.guild.me
+        perms = channel.permissions_for(me)
+        if not perms.send_messages:
+            print(f"Skipping snipe {snipe_id}: missing send permissions in {channel.name}")
+            count -= 1
+            continue
+
         try:
             sniper = await bot.fetch_user(snipe.sniper_id)
             target = await bot.fetch_user(snipe.target_id)
