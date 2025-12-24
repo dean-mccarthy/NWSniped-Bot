@@ -126,6 +126,8 @@ class Config(commands.Cog):
         guild_id = interaction.guild.id
         config = get_config(guild_id)
 
+        # print(os.getcwd())
+
         rules_text = None
         readme_path = os.path.join(os.getcwd(), "Rules.md")
         if os.path.exists(readme_path):
@@ -134,7 +136,7 @@ class Config(commands.Cog):
         else:
             rules_text = "Rules file not found."
 
-        print(rules_text)
+        # print(rules_text)
 
         text = rules_text[:3500]
 
@@ -152,10 +154,25 @@ class Config(commands.Cog):
 
         await interaction.response.send_message(embed=embed)
 
+    
+    @app_commands.command(name="achievements", description="Lists all available acheivements")
+    async def list_achievements(self, interaction: discord.Interaction):
+        ach_text = None
+        readme_path = os.path.join(os.getcwd(), "Achievements.md")
+        if os.path.exists(readme_path):
+            with open(readme_path, "r", encoding="utf-8") as f:
+                ach_text = f.read()
+        else:
+            ach_text = "Acheivements file not found."
 
+        print(ach_text)
 
-
-
+        embed = discord.Embed(
+            title="Sniped Bot Achievements",
+            description=ach_text, 
+            color=discord.Color.gold())
+        
+        await interaction.response.send_message(embed=embed)
 
     
 async def setup(bot: commands.Bot):

@@ -115,4 +115,35 @@ class Snipe:
         return dt.strftime("%b %d, %H:%M")
     
 
+@dataclass(frozen=True)
+class AcheivementData:
+    name: str
+    point_value: int
+
+
+# class AcheivementName(Enum):
+#     KillStreak = AcheivementData("Kill Streak", 2)
+#     ShutDown = AcheivementData("Shut Down", 1)
+#     Revengeful = AcheivementData("Revengeful", 1)
+#     LoveTriangle = AcheivementData("Love Triangle", 1)
+#     ScreenPeek = AcheivementData("Screen Peek", 0.5)
+#     Camper: 0.5
+#     NothingPersonnel: 1
+#     SponsoredByTransLink: 1
+#     ThomasTheTank: 2
+#     Pirate: 2
+#     Doppelganger: -0.5
+#     SniperNoSniping: 0.5
+#     NoBusinessOnContinentalGrounds: -1
+#     VirtualInsanity: 0.5
+#     AssistTrophy: 0.5
+#     GhostsOfThePast: 0.5
+#     PerfectlyBalanced: 2
+#     SittingDuck: 2
+#     LicenseToKill: 1
+#     SneakyBeaky: 1
+#     Pacifist: 1
+#     CompletedPokedex: 3
+    
+
     
