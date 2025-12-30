@@ -56,7 +56,7 @@ These achievements can be granted to players using the `/giveachievement` comman
 * **Doppelgänger**
     * Have your snipe invalidated due to your target being a doppelgänger
     * *Snipe Value:* -0.5
-* **No business on Continental grounds**
+* **Home Plate**
     * Have your snipe invalidated due to sniping in a safezone
     * *Snipe Value:* -1
 

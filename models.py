@@ -116,34 +116,31 @@ class Snipe:
     
 
 @dataclass(frozen=True)
-class AcheivementData:
+class AchievementData:
     name: str
     point_value: int
 
 
-# class AcheivementName(Enum):
-#     KillStreak = AcheivementData("Kill Streak", 2)
-#     ShutDown = AcheivementData("Shut Down", 1)
-#     Revengeful = AcheivementData("Revengeful", 1)
-#     LoveTriangle = AcheivementData("Love Triangle", 1)
-#     ScreenPeek = AcheivementData("Screen Peek", 0.5)
-#     Camper: 0.5
-#     NothingPersonnel: 1
-#     SponsoredByTransLink: 1
-#     ThomasTheTank: 2
-#     Pirate: 2
-#     Doppelganger: -0.5
-#     SniperNoSniping: 0.5
-#     NoBusinessOnContinentalGrounds: -1
-#     VirtualInsanity: 0.5
-#     AssistTrophy: 0.5
-#     GhostsOfThePast: 0.5
-#     PerfectlyBalanced: 2
-#     SittingDuck: 2
-#     LicenseToKill: 1
-#     SneakyBeaky: 1
-#     Pacifist: 1
-#     CompletedPokedex: 3
-    
+class AchievementName(Enum):
+    KILL_STREAK             = AchievementData("Kill Streak", 2)
+    SHUT_DOWN               = AchievementData("Shut Down", 1)
+    REVENGEFUL              = AchievementData("Revengeful", 1)
+    LOVE_TRIANGLE           = AchievementData("Love Triangle", 1)
+    SCREEN_PEEK             = AchievementData("Screen Peek", 0.5)
+    CAMPER                  = AchievementData("Camper", 0.5)
+    NOTHING_PERSONNEL       = AchievementData("Nothing Personnel", 1.0)
+    SPONSORED_BY_TRANSLINK  = AchievementData("Sponsored by TransLink", 1.0)
+    THOMAS_THE_TANK         = AchievementData("Thomas the Tank", 2.0)
+    PIRATE                  = AchievementData("Pirate", 2.0)
+    DOPPLEGANGER            = AchievementData("Doppleganger", -0.5)
+    HOME_PLATE              = AchievementData("Home Plate", -1.0)
+    VIRTUAL_INSANITY        = AchievementData("Virtual Insanity", 0.5)
+    ASSIST_TROPHY           = AchievementData("Assist Trophy", 0.5)
+    GHOSTS_OF_THE_PAST      = AchievementData("Ghosts of the Past", 0.5)
+    PERFECTLY_BALANCED      = AchievementData("Perfectly Balanced", 2.0)
+    SITTING_DUCK            = AchievementData("Sitting Duck", 2.0)
+    LICENSE_TO_KILL         = AchievementData("License to Kill", 1.0)
+    SNEAKY_BEAKY            = AchievementData("Sneaky Beaky", 1.0)
+    PACIFIST                = AchievementData("Pacifist", 1.0)
+    COMPLETED_POKEDEX       = AchievementData("Completed Pokedex", 3.0)
 
-    

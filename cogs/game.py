@@ -1,4 +1,5 @@
 import random
+from typing import Optional
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -62,6 +63,58 @@ class Game(commands.Cog):
 
         await send_snipe_confirmation(interaction.channel, guild_id, player, interaction.user, snipe_id)
 
+    @app_commands.command(name="giveachievement", description="Give or remove an achievement")
+    @app_commands.describe(player= "Player to give achievement to", achievement= "Achievement to give", remove= "set to True to remove achievement")
+    @check(check_perms)
+    @check(check_initialized)
+    async def giveachievement(self, 
+                              interaction: discord.Interaction, 
+                              player: discord.Member, 
+                              achievement: Literal[
+                                  "PIRATE",
+                                  "THOMAS_THE_TANK",
+                                  "SPONSORED_BY_TRANSLINK",
+                                  "SCREEN_PEEK",
+                                  "CAMPER",
+                                  "VIRTUAL_INSANITY",
+                                  "ASSIST_TROPHY",
+                                  "GHOSTS_OF_THE_PAST",
+                                  "DOPPLEGANGER",
+                                  "HOME_PLATE"], 
+                              remove: Optional[bool] = False
+                              ):
+        
+        guild_id = interaction.guild.id
+        target_id = player.id
+
+        player_data = get_player(guild_id, target_id)
+        if not player_data:
+            await safe_send(interaction, f"{player.display_name} is not in the game!", ephemeral=True)
+            return
+        
+        if remove:
+            if achievement not in player_data.achievements:
+                await safe_send(interaction, f"{player.display_name} does not have the achievement: {achievement}", ephemeral=True)
+                return
+            
+            else:
+                player_data.achievements.remove(achievement)
+                save_player(player_data, guild_id)
+            await safe_send(interaction, f"{achievement} has been removed from {player.display_name}")
+            
+
+        else:
+            if achievement in player_data.achievements:
+                await safe_send(interaction, f"{player.display_name} already has the achievement: {achievement}", ephemeral=True)
+                return
+            
+            else:
+                player_data.achievements.append(achievement)
+                save_player(player_data, guild_id)
+
+            await safe_send(interaction, f"{player.display_name} has been awarded **{achievement.replace('_', ' ').title()}**! Happy Hunting!", ephemeral=False)
+                                    
+
     # @app_commands.command(name="snipeception", description="Snipe a player while they are sniping another player")
     # @app_commands.describe(player="Select the player to snipeception")
     # @check(check_initialized)
@@ -103,7 +156,6 @@ class Game(commands.Cog):
     #     await send_snipe_confirmation(interaction, guild_id, player, snipe_id)
 
         
-
 async def send_snipe_confirmation(channel: discord.TextChannel, guild_id, target: discord.user, sniper: discord.user, snipe_id):
     snipe = get_snipe_by_id(snipe_id)
     while True:
@@ -133,8 +185,6 @@ async def send_snipe_confirmation(channel: discord.TextChannel, guild_id, target
                 pass
             continue
     return
-            
-
 
 
 
