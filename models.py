@@ -44,7 +44,9 @@ class User:
     guild_id: int
     snipes: int = 0
     times_sniped: int = 0
+    kill_streak: int = 0
     achievements: list[str] = None
+    targets: list[int] = None
 
     @staticmethod
     def from_dict(data):
@@ -53,7 +55,9 @@ class User:
             guild_id=data["guild_id"],
             snipes=data.get("snipes", 0),
             times_sniped=data.get("times_sniped", 0),
-            achievements=data.get("achievements", []) or []
+            kill_streak=data.get("kill_streak", 0),
+            achievements=data.get("achievements", []) or [],
+            targets=data.get("targets", []) or []
         )
 
     def to_dict(self):
@@ -69,6 +73,7 @@ class ServerConfig:
     achievements_enabled: bool = True
     safe_times: List[SafeTime] = None # (day, start_time, end_time)
     paused: bool = False
+    channel: int = 0
 
     def to_dict(self):
         data = asdict(self)
@@ -83,7 +88,9 @@ class ServerConfig:
             points_per_snipe=data.get("points_per_snipe", 1.0),
             penalty_per_snipe=data.get("penalty_per_snipe", 1.0),
             achievements_enabled=data.get("achievements_enabled", True),
-            safe_times=[SafeTime.from_dict(st) for st in data.get("safe_times", [])]
+            safe_times=[SafeTime.from_dict(st) for st in data.get("safe_times", [])],
+            paused=data.get("paused", False),
+            channel=data.get("channel", 0),
         )
     
 

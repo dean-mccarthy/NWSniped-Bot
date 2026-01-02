@@ -59,17 +59,35 @@ def confirm_snipe(snipe_id):
     guild_id = snipe.guild_id
     sniper_id = snipe.sniper_id
     target_id = snipe.target_id
+
+    sniper = get_player(guild_id, sniper_id)
+    target = get_player(guild_id, target_id)
     
-    db.users.update_one( # update sniper
-        {"guild_id": guild_id, "user_id": sniper_id},
-        {"$inc": {"snipes": 1}}
-        )
-    db.users.update_one( # update target
-        {"guild_id": guild_id, "user_id": target_id},
-        {"$inc": {"times_sniped": 1}}
-        )
+    # update sniper
+    sniper.snipes += 1
+    if target_id not in sniper.targets: 
+        sniper.targets.append(target_id)
+    save_player(sniper, guild_id)
+
+    # update target
+    target.times_sniped += 1
+    save_player(target, guild_id)
     
-    db.snipes.update_one({"_id": ObjectId(snipe_id)}, {"$set": {"confirmed": True}}) # update snipe confirmation status
+    # update snipe confirmation status
+    db.snipes.update_one(
+        {"_id": ObjectId(snipe_id)}, 
+        {"$set": {"confirmed": True}}
+        ) 
+    
+def update_kill_streaks(guild_id, sniper_id, target_id):
+    sniper = get_player(guild_id, sniper_id)
+    target = get_player(guild_id, target_id)
+
+    sniper.kill_streak += 1
+    save_player(sniper, guild_id)
+
+    target.kill_streak = 0
+    save_player(target, guild_id)
 
 def remove_snipe_by_id(snipe_id):
     db.snipes.delete_one({"_id": ObjectId(snipe_id)})
@@ -77,6 +95,13 @@ def remove_snipe_by_id(snipe_id):
 def get_snipe_by_id(snipe_id):
     snipe_data = db.snipes.find_one({"_id":snipe_id})
     return Snipe.from_dict(snipe_data)
+
+def get_user_snipes(guild_id, player_id):
+    snipe_data = db.snipes.find({
+        "guild_id": guild_id,
+        "sniper_id": player_id
+    })
+    return [Snipe.from_dict(snipe) for snipe in snipe_data]
 
 def get_unconfirmed_snipes():
     snipes = db.snipes.find({"confirmed": False})

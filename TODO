@@ -20,13 +20,15 @@
 - [x] Remove invalid snipe
 - [x] Dockerize and send to GCloud
 - [x] Host Mongo on GCloud VM
-- [ ] Check for snipe existing ever time resend confirmation
+- [x] Check for snipe existing ever time resend confirmation
 - [x] Check for unconfirmed snipes on startup and reset timer (run send confirm for all in msg)
 
 ## UX Improvements
 - [x] Make bot request confirmation from players players when or sniped
 - [x] Add check for most commands to ensure game is initialized
 - [x] Allow /config to view current settings
+- [ ] Change /initgame to /startgame
+- [ ] Modify /startgame to grab channel id for resends
 
 ## Admin Commands
 - [x] Add /resetgame

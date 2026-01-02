@@ -8,6 +8,7 @@ import os
 from dotenv import load_dotenv
 from utils.util_db import *
 from utils.utils_checks import *
+from utils.utils_achv import check_achievements, send_achievement
 from views import *
 
 load_dotenv()
@@ -61,7 +62,7 @@ class Game(commands.Cog):
         # print(message)
         await safe_send(interaction, message, ephemeral=False)
 
-        await send_snipe_confirmation(interaction.channel, guild_id, player, interaction.user, snipe_id)
+        await send_snipe_confirmation(self.bot, interaction.channel, guild_id, player, interaction.user, snipe_id)
 
     @app_commands.command(name="giveachievement", description="Give or remove an achievement")
     @app_commands.describe(player= "Player to give achievement to", achievement= "Achievement to give", remove= "set to True to remove achievement")
@@ -112,7 +113,7 @@ class Game(commands.Cog):
                 player_data.achievements.append(achievement)
                 save_player(player_data, guild_id)
 
-            await safe_send(interaction, f"{player.display_name} has been awarded **{achievement.replace('_', ' ').title()}**! Happy Hunting!", ephemeral=False)
+            await safe_send(interaction, f"{player.mention} has been awarded **{achievement.replace('_', ' ').title()}**! Happy Hunting!", ephemeral=False)
                                     
 
     # @app_commands.command(name="snipeception", description="Snipe a player while they are sniping another player")
@@ -156,7 +157,7 @@ class Game(commands.Cog):
     #     await send_snipe_confirmation(interaction, guild_id, player, snipe_id)
 
         
-async def send_snipe_confirmation(channel: discord.TextChannel, guild_id, target: discord.user, sniper: discord.user, snipe_id):
+async def send_snipe_confirmation(bot, channel: discord.TextChannel, guild_id, target: discord.Member, sniper: discord.Member, snipe_id):
     snipe = get_snipe_by_id(snipe_id)
     while True:
         view = ConfirmSnipeView(guild_id, target)
@@ -167,6 +168,7 @@ async def send_snipe_confirmation(channel: discord.TextChannel, guild_id, target
         await view.wait()
 
         if view.confirmed is True:
+            check_achievements(bot, guild_id, sniper, target)
             confirm_snipe(snipe_id)
             message = get_snipe_message(sniper, target, SayingsType.SNIPE)
             await channel.send(message)
