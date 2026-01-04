@@ -29,6 +29,7 @@
 - [x] Allow /config to view current settings
 - [x] Change /initgame to /startgame
 - [x] Modify /startgame to grab channel id for resends
+- [ ] Add killstreak and shutdown messages
 
 ## Admin Commands
 - [x] Add /resetgame

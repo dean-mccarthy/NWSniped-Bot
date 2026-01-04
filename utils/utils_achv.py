@@ -35,22 +35,27 @@ def nothing_personnel(ctx: InGameAchvContext) -> bool:
     total_snipes = sum(1 for s  in ctx.s_snipes if s.target_id == target_id)
     return total_snipes >= 3
 
-def love_triangle(ctx: InGameAchvContext) -> bool:
+def love_triangle(ctx: InGameAchvContext, bot: discord.Client) -> bool:
+    guild_id = ctx.guild_id
     sniper_id = ctx.sniper_data.user_id
     target_id = ctx.target_data.user_id
     s_snipes = ctx.s_snipes
     t_snipes = ctx.t_snipes
 
     s_last = filter_last_week(s_snipes)
-    s_shots_recv = filter_last_week(get_user_shots_recv(ctx.guild_id, sniper_id))
+    s_shots_recv = filter_last_week(get_user_shots_recv(guild_id, sniper_id))
     t_last = filter_last_week(t_snipes)
-    t_shots_recv = filter_last_week(get_user_shots_recv(ctx.guild_id, target_id))
+    t_shots_recv = filter_last_week(get_user_shots_recv(guild_id, target_id))
 
     match1 = triangle_solver(s_last, t_shots_recv) # Find players who have been shot by sniper and shot target
     match2 = triangle_solver(t_last, s_shots_recv) # Find players who have been shot by target and shot sniper
 
     matches = match1 + list(set(match2) - set(match1)) 
-    #TODO: Figure out how to assign this shit
+    achv = AchievementName("LOVE_TRIANGLE")
+    for player_id in matches:
+        player = bot.get_user(player_id)
+        send_achievement(bot, guild_id, player, achv)
+        push_achv_user(player_id, guild_id, "LOVE_TRIANGLE")
     return
 
 def triangle_solver(s_snipes, t_snipes):
@@ -99,7 +104,7 @@ async def check_achievements(bot: discord.Client, guild_id, sniper: discord.Memb
     update_kill_streaks(guild_id, sniper_id, target_id)
 
     # love triangle is intensive and a special case so should run last
-    love_triangle(ctx)
+    love_triangle(ctx, bot)
 
 
 

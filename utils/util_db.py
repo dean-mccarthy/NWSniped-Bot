@@ -39,6 +39,12 @@ def save_player(player: User, guild_id):
         upsert=True
     )
 
+def push_achv_user(player_id: int, guild_id, achv: str):
+    db.users.update_one(
+        {"user_id": player_id, "guild_id": guild_id},
+        {"$push": {"achievements": achv}}
+    )
+
 def remove_player(guild_id, player_id):
     db.users.delete_one({"guild_id": guild_id, "user_id": player_id})
 
