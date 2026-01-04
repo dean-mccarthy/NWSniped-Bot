@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from discord.ext import commands
 from discord import app_commands
 from utils.utils_checks import *
-from utils.util_db import get_unconfirmed_snipes
+from utils.util_db import get_unconfirmed_snipes, get_config
 import sys
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -73,20 +73,26 @@ async def on_guild_join(guild: discord.Guild):
 async def restart_unconfirmed_snipes():
     snipes = get_unconfirmed_snipes()
     count = len(snipes)
+    print(f"attempting to start {count} snipes")
     for snipe_id, snipe in snipes:
-        if not snipe.channel:
+        guild_id = snipe.guild_id
+        channel_id = int(get_config(guild_id).channel)
+        print(f"Channel ID: {channel_id}")
+        if not channel_id:
             print(f"Skipping snipe {snipe_id}: no channel available")
             count -= 1 
             continue
 
-        channel = bot.get_channel(snipe.channel)
+        channel = bot.get_channel(channel_id)
+        print(f"Channel : {channel}")
         if not channel:
-            print(f"Skipping snipe {snipe_id}: channel {snipe.channel} not found (probably left guild)")
+            print(f"Skipping snipe {snipe_id}: channel {channel_id} not found (probably left guild)")
             count -= 1 
             continue
 
         me = channel.guild.me
         perms = channel.permissions_for(me)
+        print(me, perms)
         if not perms.send_messages:
             print(f"Skipping snipe {snipe_id}: missing send permissions in {channel.name}")
             count -= 1
@@ -98,9 +104,10 @@ async def restart_unconfirmed_snipes():
         except Exception as e:
             print(f"[restart_unconfirmed_snipes] Failed to fetch users for snipe {snipe_id}: {e}")
             continue
-
+            
+        print("sending snipe")
         asyncio.create_task(
-            send_snipe_confirmation(channel, snipe.guild_id, target, sniper, snipe_id),
+            send_snipe_confirmation(bot, channel, guild_id, target, sniper, snipe_id),
             name=f"snipe-confirm-{snipe_id}"
         )
     print(f"[restart_unconfirmed_snipes] Restarted {count} unconfirmed snipes")

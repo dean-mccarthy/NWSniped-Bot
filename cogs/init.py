@@ -27,8 +27,8 @@ class Init(commands.Cog):
 
     @app_commands.command(name="help", description="List all available commands")
     async def help(self, interaction:discord.Interaction):
-        embed = discord.Embed(title="Sniped Bot Help", description="", color=discord.Color.blue())
-        embed.add_field(name="To get started, use /initgame to start the game!", value="", inline=False)
+        embed = discord.Embed(title="Sniped Bot Help", description="", color=discord.Color.purple())
+        embed.add_field(name="Use `/startgame` to get the game started!", value="", inline=False)
         embed.add_field(name="Here are all of my commands:", value="", inline=False)
 
         commands = sorted(self.bot.tree.get_commands(), key=lambda cmd:cmd.name)
@@ -42,13 +42,13 @@ class Init(commands.Cog):
 
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
-    @app_commands.command(name="initgame", description="Initialize the snipe game")
+    @app_commands.command(name="startgame", description="Start the snipe game in this channel")
     @check(check_perms)
-    async def init_game(self, interaction: discord.Interaction):
+    async def start_game(self, interaction: discord.Interaction):
         """
         Command to initialize game
 
-        Initializes json file for current server if one does not exist already
+        Initializes mongo file for current server if one does not exist already
         """
         #print("Attempting to init game")
         guild_id = interaction.guild.id
@@ -57,11 +57,24 @@ class Init(commands.Cog):
             await interaction.response.send_message("Game already exists!", ephemeral=True)
             return
         
-        config = ServerConfig(guild_id=guild_id)
+        config = ServerConfig(guild_id=guild_id, channel=interaction.channel_id)
         save_config(config)
 
-        await interaction.response.send_message("Game has been initialized!")
+        await interaction.response.send_message("Game has begun! Good Luck and Good Hunting!")
 
+    @app_commands.command(name="setchannel", description="Set the game to play in the current channel")
+    @check(check_perms)
+    @check(check_initialized)
+    async def set_channel(self, interaction: discord.Interaction):
+
+        guild_id = interaction.guild.id
+        config = get_config(guild_id)
+        config.channel = interaction.channel_id
+        save_config(config)
+
+        await interaction.response.send_message("Game channel has been changed to *this* channel")
+
+        
     @app_commands.command(name="addplayer", description="Register a player in the snipe game")
     @app_commands.describe(player="Select the player to add")
     @check(check_perms)

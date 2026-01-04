@@ -1,4 +1,4 @@
-# UBC A Cappella Sniped Bot v1.2!
+# UBC A Cappella Sniped Bot v2.0!
 Welcome to the Discord Sniped Bot designed for use in UBC A Cappella!  
 This bot exists to facilitate gameplay by keeping track of scores, leaderboards, and acheivements.  
 If you run into any issues or have ideas for additional features please message me on discord: @oriose
@@ -12,10 +12,15 @@ This discord bot was written in PyCord and stores data using MongoDB. Originally
 *Commands marked by * can only be used by users with the `@Sniped Control` role*
 
 **Try `/ping` to get used to the commands!**
-### Game Start:  
+### Info
+
 `/help` Lists all available commands  
 `/rules` Lists the rules of the game as NWC plays (adjust to your liking)
-`/initgame`* Initializes game for the server, initial settings configuration are as such:  
+`/achievements` Lists the available achievements in the game
+
+### Game Start:  
+
+`/startgame`* Starts the game for the server, initial settings configuration are as such:  
 
     points_per_snipe: 1.0
     penalty_per_snipe: 1.0
@@ -25,13 +30,16 @@ This discord bot was written in PyCord and stores data using MongoDB. Originally
 `/config`* View or change the settings of your game \
 `/safetime`* Add, remove, or view safetimes \
 `/resetgame`* Reset all game data and settings for your server  
+`/setchannel`* Set the channel to play the game
+
 `/joingame` Add yourself to the game \
 `/addplayer`* Add a player to the game  
 `/removeplayer`* Remove a player and all snipes related to them
 
 ### Gameplay:
 `/snipe` Snipe a player! \
-`/deletesnipe`* Remove an invalid snipe 
+`/deletesnipe`* Remove an invalid snipe \
+`/giveachievement`* Give or remove a manual achievement from a player
 
 ### Leaderboard:
 `/leaderboard` Show the current points leaderboard  
@@ -73,6 +81,14 @@ Take pictures of other players without them knowing and try to avoid getting pic
 
 
 ## Version Changelog
+### V2.0
+- Achievements added!
+  - Achievements are evaluated on snipe or can be manually given
+  - End of game achievements to come later
+- QOL changes
+  - rename initgame -> startgame
+  - 
+
 ### V1.2
 - Transfer hosting to VPS from GCP
 - GCP got really expensive :(

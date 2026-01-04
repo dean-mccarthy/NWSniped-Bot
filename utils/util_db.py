@@ -96,6 +96,7 @@ def get_snipe_by_id(snipe_id):
     snipe_data = db.snipes.find_one({"_id":snipe_id})
     return Snipe.from_dict(snipe_data)
 
+# Returns all snipes where the player is the sniper
 def get_user_snipes(guild_id, player_id):
     snipe_data = db.snipes.find({
         "guild_id": guild_id,
@@ -103,10 +104,19 @@ def get_user_snipes(guild_id, player_id):
     })
     return [Snipe.from_dict(snipe) for snipe in snipe_data]
 
+# Returns all snipes where the player is the target
+def get_user_shots_recv(guild_id, player_id):
+    snipe_data = db.snipes.find({
+        "guild_id": guild_id,
+        "target_id": player_id
+    })
+    return [Snipe.from_dict(snipe) for snipe in snipe_data]
+
 def get_unconfirmed_snipes():
     snipes = db.snipes.find({"confirmed": False})
     return [(snipe["_id"], Snipe.from_dict(snipe)) for snipe in snipes]
 
+# Returns all snipes from a guild
 def get_snipes_from_guild(guild_id, limit):
     data = db.snipes.find({"guild_id": guild_id, "confirmed": True}).sort("timestamp", -1).limit(limit)
     count = db.snipes.count_documents({"guild_id": guild_id, "confirmed": True})
@@ -163,9 +173,11 @@ def reset_players(guild_id):
         {"guild_id": guild_id},
         {
             "$set": {
-                "snipes": 0.0,
-                "times_sniped": 0.0,
-                "achievements": []
+                "snipes": 0,
+                "times_sniped": 0,
+                "killstreak": 0,
+                "achievements": [],
+                "targets": [],
             }
         }
     )

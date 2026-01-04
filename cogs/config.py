@@ -43,12 +43,12 @@ class Config(commands.Cog):
                 await interaction.response.send_message(f"Penalty per snipe now set to {newConf.penalty_per_snipe}", ephemeral=True)
                 return
             case "achievements_enabled":
-                if str(value) != "True" and str(value) != "False":
-                    await interaction.response.send_message("Achievements_enabled must be `True` or `False`", ephemeral=True)
+                if str(value) != "On" and str(value) != "Off":
+                    await interaction.response.send_message("Achievements_enabled must be `On` or `Off`", ephemeral=True)
                     return
-                newConf.achievements_enabled = str(value) == "True"
+                newConf.achievements_enabled = str(value) == "On"
                 save_config(newConf)
-                await interaction.response.send_message(f"Achievements are now {"enabled" if newConf.achievements_enabled else "disabled"}", ephemeral=True)
+                await interaction.response.send_message(f"Achievements are now {"On" if newConf.achievements_enabled else "Off"}", ephemeral=True)
                 return
             
     @app_commands.command(name="safetime", description="Add, or view safetimes")

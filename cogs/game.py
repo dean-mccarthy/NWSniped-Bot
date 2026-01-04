@@ -168,10 +168,17 @@ async def send_snipe_confirmation(bot, channel: discord.TextChannel, guild_id, t
         await view.wait()
 
         if view.confirmed is True:
-            check_achievements(bot, guild_id, sniper, target)
-            confirm_snipe(snipe_id)
-            message = get_snipe_message(sniper, target, SayingsType.SNIPE)
+            # Update db
+            confirm_snipe(snipe_id) 
+
+            # Send message
+            message = get_snipe_message(sniper, target, SayingsType.SNIPE) 
             await channel.send(message)
+            
+            # Then check achievements last 
+            config = get_config(guild_id)
+            if config.achievements_enabled:
+                await check_achievements(bot, guild_id, sniper, target) # Killstreaks are updated here
             break
         
         elif view.confirmed is False:

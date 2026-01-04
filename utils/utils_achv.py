@@ -10,51 +10,97 @@ import random
 
 PACIFIC = ZoneInfo("Canada/Pacific")
 
-def pokedex(guild_id, sniper_data: User) -> bool:
-    players = get_players_from_guild(guild_id)
-    return (len(players) - 1) == sniper_data.targets
+# Check to see if the sniper has all players but themself
+def pokedex(ctx: InGameAchvContext) -> bool:
+    players = get_players_from_guild(ctx.guild_id)
+    return (len(players) - 1) == len(ctx.sniper_data.targets)
 
-def kill_streak(guild_id, sniper_data: User) -> bool:
-    return sniper_data.kill_streak == 4
+# Check if killstreak is high enough
+def kill_streak(ctx: InGameAchvContext) -> bool:
+    return ctx.sniper_data.kill_streak == 4
 
-def shut_down(guild_id, target_data: User) -> bool:
-    return target_data.kill_streak >= 5
+# Check if enemy killstreak is high enough
+def shut_down(ctx: InGameAchvContext) -> bool:
+    return ctx.target_data.kill_streak >= 5
 
-def revengeful(guild_id, sniper_data, target_data, s_snipes, t_snipes) -> bool:
-    
+# Check if currSniper was a target of currTarget in the last week
+def revengeful(ctx: InGameAchvContext) -> bool:
+    t_last = filter_last_week(ctx.t_snipes)
+    sniper_id = ctx.sniper_data.user_id
+    return any(sniper_id == snipe.target_id for snipe in t_last)
+
+
+def nothing_personnel(ctx: InGameAchvContext) -> bool:
+    target_id = ctx.target_data.user_id
+    total_snipes = sum(1 for s  in ctx.s_snipes if s.target_id == target_id)
+    return total_snipes >= 3
+
+def love_triangle(ctx: InGameAchvContext) -> bool:
+    sniper_id = ctx.sniper_data.user_id
+    target_id = ctx.target_data.user_id
+    s_snipes = ctx.s_snipes
+    t_snipes = ctx.t_snipes
+
+    s_last = filter_last_week(s_snipes)
+    s_shots_recv = filter_last_week(get_user_shots_recv(ctx.guild_id, sniper_id))
+    t_last = filter_last_week(t_snipes)
+    t_shots_recv = filter_last_week(get_user_shots_recv(ctx.guild_id, target_id))
+
+    match1 = triangle_solver(s_last, t_shots_recv) # Find players who have been shot by sniper and shot target
+    match2 = triangle_solver(t_last, s_shots_recv) # Find players who have been shot by target and shot sniper
+
+    matches = match1 + list(set(match2) - set(match1)) 
+    #TODO: Figure out how to assign this shit
     return
 
-def love_triangle(guild_id, sniper_data, target_data,s_snipes, t_snipes) -> bool:
-    return
+def triangle_solver(s_snipes, t_snipes):
+    snipers = [s.sniper_id for s in t_snipes]
+    targets = [t.target_id for t in s_snipes]
+    matches = list(set(snipers) & set(targets))
 
-def nothing_personnel(guild_id, sniper_data, target_data, s_snipes, t_snipes) -> bool:
-    return
+    return matches
+
 
 
 ACHV_FUNCS = [
     ("KILL_STREAK", kill_streak),
     ("SHUT_DOWN", shut_down),
     ("REVENGEFUL", revengeful),
-    ("LOVE_TRIANGLE", love_triangle),
     ("NOTHING_PERSONNEL", nothing_personnel),
     ("COMPLETED_POKEDEX", pokedex)
 ]
 async def check_achievements(bot: discord.Client, guild_id, sniper: discord.Member, target: discord.Member):
+    print("checking achvs")
     sniper_id = sniper.id
     target_id = target.id
     sniper_data = get_player(guild_id, sniper_id)
+    target_data = get_player(guild_id, target_id)
     sniper_achv = sniper_data.achievements
     sniper_snipes = get_user_snipes(guild_id, sniper_id)
     target_snipes = get_user_snipes(guild_id, target_id)
 
+    ctx = InGameAchvContext(guild_id, sniper_data, target_data, sniper_snipes, target_snipes)
+
     for achv, func in ACHV_FUNCS:
         if achv in sniper_achv:
             continue
-
-        if func(guild_id, sniper_data, target_id, sniper_snipes, target_snipes):
+        
+        print("running", achv)
+        if func(ctx):
+            sniper_data.achievements.append(achv)
             await send_achievement(bot, guild_id, sniper, AchievementName[achv])
+        else:
+            print(f"{achv} not given")
 
+    # update player achievements
+    save_player(sniper_data, guild_id)
+    
+    # update streaks after running achievement checks
     update_kill_streaks(guild_id, sniper_id, target_id)
+
+    # love triangle is intensive and a special case so should run last
+    love_triangle(ctx)
+
 
 
 async def send_achievement(bot: discord.Client, guild_id, player: discord.Member, achievement: AchievementName):
@@ -62,3 +108,11 @@ async def send_achievement(bot: discord.Client, guild_id, player: discord.Member
     channel = bot.get_channel(guild_data.channel)
     await channel.send(f"{player.mention} has been awarded **{achievement.value.name}**! Happy Hunting!")
     return
+
+def filter_last_week(snipes):
+    last_week = (datetime.now(PACIFIC) - timedelta(days=7)).date()
+    last_snipes = [ 
+        s for s in snipes
+        if datetime.fromisoformat(s.timestamp).date() >= last_week ] 
+    
+    return last_snipes

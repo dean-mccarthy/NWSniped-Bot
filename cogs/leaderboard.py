@@ -42,7 +42,7 @@ class Leaderboard(commands.Cog):
         # print("Players:", players)
 
         for user in players:
-            achievement_score = sum(AchievementName[achievement].value.point_value for achievement in user.achievements)
+            achievement_score = sum(AchievementName[achievement].value.point_value for achievement in user.achievements) if config.achievements_enabled else 0
             score = (user.snipes * config.points_per_snipe) - (user.times_sniped * config.penalty_per_snipe) + (achievement_score * config.points_per_snipe)
             name = await get_name(self.bot, guild_id, user.user_id)
             rows.append((name, user.snipes, user.times_sniped, achievement_score, score))

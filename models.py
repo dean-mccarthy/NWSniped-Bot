@@ -122,6 +122,16 @@ class Snipe:
         return dt.strftime("%b %d, %H:%M")
     
 
+
+@dataclass
+class InGameAchvContext:
+    guild_id: int
+    sniper_data: User
+    target_data: User
+    s_snipes: list
+    t_snipes: list
+    
+
 @dataclass(frozen=True)
 class AchievementData:
     name: str
@@ -150,4 +160,5 @@ class AchievementName(Enum):
     SNEAKY_BEAKY            = AchievementData("Sneaky Beaky", 1.0)
     PACIFIST                = AchievementData("Pacifist", 1.0)
     COMPLETED_POKEDEX       = AchievementData("Completed Pokedex", 3.0)
+
 

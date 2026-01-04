@@ -10,7 +10,7 @@
 - [x] Implement list_snipes
 - [x] Implement config view
 - [ ] Implement image verification for snipes (attach image check)
-- [ ] Implement achievements
+- [x] Implement achievements
 - [x] Implement safe windows
 - [ ] Implement Snipeception
 
@@ -27,8 +27,8 @@
 - [x] Make bot request confirmation from players players when or sniped
 - [x] Add check for most commands to ensure game is initialized
 - [x] Allow /config to view current settings
-- [ ] Change /initgame to /startgame
-- [ ] Modify /startgame to grab channel id for resends
+- [x] Change /initgame to /startgame
+- [x] Modify /startgame to grab channel id for resends
 
 ## Admin Commands
 - [x] Add /resetgame
