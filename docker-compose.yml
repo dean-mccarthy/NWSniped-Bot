@@ -1,13 +1,13 @@
 services:
   mongo:
     image: mongo:latest
-    container_name: mongo
+    container_name: mongodb
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: oriose
       MONGO_INITDB_ROOT_PASSWORD: nwc
     volumes:
-      - mongo_data:/data/db
+      - sniped_bot_data:/data/db
     ports:
       - "27017:27017"
 
@@ -26,3 +26,4 @@ services:
 
 volumes:
   mongo_data:
+  sniped_bot_data:
