@@ -81,6 +81,11 @@ Take pictures of other players without them knowing and try to avoid getting pic
 
 
 ## Version Changelog
+
+### V2.1
+- Added killstreak and shutdown messages
+  - These messages will still be shown even if achievements are turned off
+
 ### V2.0
 - Achievements added!
   - Achievements are evaluated on snipe or can be manually given
