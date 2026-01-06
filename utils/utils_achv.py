@@ -43,7 +43,7 @@ def nothing_personnel(ctx: InGameAchvContext) -> bool:
     total_snipes = sum(1 for s  in ctx.s_snipes if s.target_id == target_id)
     return total_snipes >= 3
 
-def love_triangle(ctx: InGameAchvContext, bot: discord.Client) -> bool:
+async def love_triangle(ctx: InGameAchvContext, bot: discord.Client) -> bool:
     guild_id = ctx.guild_id
     sniper_id = ctx.sniper_data.user_id
     target_id = ctx.target_data.user_id
@@ -62,7 +62,7 @@ def love_triangle(ctx: InGameAchvContext, bot: discord.Client) -> bool:
     achv = AchievementName("LOVE_TRIANGLE")
     for player_id in matches:
         player = bot.get_user(player_id)
-        send_achievement(bot, guild_id, player, achv)
+        await send_achievement(bot, guild_id, player, achv)
         push_achv_user(player_id, guild_id, "LOVE_TRIANGLE")
     return
 
@@ -116,6 +116,7 @@ async def check_achievements(bot: discord.Client, guild_id, sniper: discord.Memb
 async def send_achievement(bot: discord.Client, guild_id, player: discord.Member, achievement: AchievementName):
     guild_data = get_config(guild_id)
     channel = bot.get_channel(guild_data.channel)
+    print(f"sending {achievement} to {guild_data.channel}")
     await channel.send(f"{player.mention} has been awarded **{achievement.value.name}**! Happy Hunting!")
     return
 
@@ -138,7 +139,7 @@ async def check_killspree(bot: discord.Client, guild_id, sniper: discord.Member,
     target_data = get_player(guild_id, target.id)
     
     s_ks = sniper_data.kill_streak + 1
-    if sniper_data.kill_streak >= 5:
+    if s_ks >= 5:
         s_ks = min(10, s_ks)
         await channel.send(f"{sniper.mention} is {KS_CALLOUTS.get(s_ks, "")}!")
 

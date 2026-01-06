@@ -184,7 +184,7 @@ def reset_players(guild_id):
             "$set": {
                 "snipes": 0,
                 "times_sniped": 0,
-                "killstreak": 0,
+                "kill_streak": 0,
                 "achievements": [],
                 "targets": [],
             }

@@ -144,7 +144,7 @@ class Init(commands.Cog):
         Resets all users to base values
         """
         guild_id = interaction.guild.id
-        config = ServerConfig(guild_id=guild_id)
+        config = ServerConfig(guild_id=guild_id, channel=interaction.channel_id)
         view = ConfirmDeleteView()
         await interaction.response.send_message(
             "Are you sure you want to reset the game? This action cannot be undone.",
