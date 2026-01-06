@@ -107,7 +107,8 @@ def get_snipe_by_id(snipe_id):
 def get_user_snipes(guild_id, player_id):
     snipe_data = db.snipes.find({
         "guild_id": guild_id,
-        "sniper_id": player_id
+        "sniper_id": player_id,
+        "confirmed": True
     })
     return [Snipe.from_dict(snipe) for snipe in snipe_data]
 
@@ -115,7 +116,8 @@ def get_user_snipes(guild_id, player_id):
 def get_user_shots_recv(guild_id, player_id):
     snipe_data = db.snipes.find({
         "guild_id": guild_id,
-        "target_id": player_id
+        "target_id": player_id,
+        "confirmed": True
     })
     return [Snipe.from_dict(snipe) for snipe in snipe_data]
 
