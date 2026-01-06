@@ -86,6 +86,7 @@ def confirm_snipe(snipe_id):
         ) 
     
 def update_kill_streaks(guild_id, sniper_id, target_id):
+    # print("updating KS")
     sniper = get_player(guild_id, sniper_id)
     target = get_player(guild_id, target_id)
 

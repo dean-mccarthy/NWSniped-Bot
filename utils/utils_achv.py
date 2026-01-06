@@ -9,6 +9,14 @@ from models import *
 import random
 
 PACIFIC = ZoneInfo("Canada/Pacific")
+KS_CALLOUTS = {
+    5: "on a **Killing Spree**",
+    6: "on a **Rampage**",
+    7: "**Unstoppable**",
+    8: "**Dominating**",
+    9: "***Godlike***",
+    10: "***Legendary***"
+}
 
 # Check to see if the sniper has all players but themself
 def pokedex(ctx: InGameAchvContext) -> bool:
@@ -99,9 +107,6 @@ async def check_achievements(bot: discord.Client, guild_id, sniper: discord.Memb
 
     # update player achievements
     save_player(sniper_data, guild_id)
-    
-    # update streaks after running achievement checks
-    update_kill_streaks(guild_id, sniper_id, target_id)
 
     # love triangle is intensive and a special case so should run last
     love_triangle(ctx, bot)
@@ -121,3 +126,24 @@ def filter_last_week(snipes):
         if datetime.fromisoformat(s.timestamp).date() >= last_week ] 
     
     return last_snipes
+
+
+async def check_killspree(bot: discord.Client, guild_id, sniper: discord.Member, target: discord.Member):
+    # print("checking ks")
+    guild_data = get_config(guild_id)
+    channel = bot.get_channel(guild_data.channel)
+    # print("channel", channel)
+
+    sniper_data = get_player(guild_id, sniper.id)
+    target_data = get_player(guild_id, target.id)
+    
+    s_ks = sniper_data.kill_streak + 1
+    if sniper_data.kill_streak >= 5:
+        s_ks = min(10, s_ks)
+        await channel.send(f"{sniper.mention} is {KS_CALLOUTS.get(s_ks, "")}!")
+
+    if target_data.kill_streak >= 5:
+        await channel.send(f"{sniper.mention} has **SHUTDOWN** {target.mention}'s killing spree!")
+
+    return
+

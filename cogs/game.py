@@ -8,7 +8,7 @@ import os
 from dotenv import load_dotenv
 from utils.util_db import *
 from utils.utils_checks import *
-from utils.utils_achv import check_achievements, send_achievement
+from utils.utils_achv import check_achievements, check_killspree
 from views import *
 
 load_dotenv()
@@ -174,11 +174,19 @@ async def send_snipe_confirmation(bot, channel: discord.TextChannel, guild_id, t
             # Send message
             message = get_snipe_message(sniper, target, SayingsType.SNIPE) 
             await channel.send(message)
+
+            # Get killstreak message
+            await check_killspree(bot, guild_id, sniper, target)
+            # print("done check ks")
             
-            # Then check achievements last 
+            # Then check achievements 
             config = get_config(guild_id)
             if config.achievements_enabled:
-                await check_achievements(bot, guild_id, sniper, target) # Killstreaks are updated here
+                await check_achievements(bot, guild_id, sniper, target)
+             
+            # Last, update killstreaks such that they can be used without achievements
+            update_kill_streaks(guild_id, sniper.id, target.id)
+
             break
         
         elif view.confirmed is False:

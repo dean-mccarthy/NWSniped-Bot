@@ -145,7 +145,7 @@ class Config(commands.Cog):
                 f"- Points per snipe: `{config.points_per_snipe}`\n"
                 f"- Penalty per snipe: `{config.penalty_per_snipe}`"
             )
-        print(text)
+        # print(text)
         embed = discord.Embed(
             title="Game Rules",
             description=text[:4000],

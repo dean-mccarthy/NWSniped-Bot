@@ -161,4 +161,3 @@ class AchievementName(Enum):
     PACIFIST                = AchievementData("Pacifist", 1.0)
     COMPLETED_POKEDEX       = AchievementData("Completed Pokedex", 3.0)
 
-

@@ -77,14 +77,14 @@ async def restart_unconfirmed_snipes():
     for snipe_id, snipe in snipes:
         guild_id = snipe.guild_id
         channel_id = int(get_config(guild_id).channel)
-        print(f"Channel ID: {channel_id}")
+        # print(f"Channel ID: {channel_id}")
         if not channel_id:
             print(f"Skipping snipe {snipe_id}: no channel available")
             count -= 1 
             continue
 
         channel = bot.get_channel(channel_id)
-        print(f"Channel : {channel}")
+        # print(f"Channel : {channel}")
         if not channel:
             print(f"Skipping snipe {snipe_id}: channel {channel_id} not found (probably left guild)")
             count -= 1 
@@ -92,7 +92,7 @@ async def restart_unconfirmed_snipes():
 
         me = channel.guild.me
         perms = channel.permissions_for(me)
-        print(me, perms)
+        # print(me, perms)
         if not perms.send_messages:
             print(f"Skipping snipe {snipe_id}: missing send permissions in {channel.name}")
             count -= 1
@@ -105,7 +105,7 @@ async def restart_unconfirmed_snipes():
             print(f"[restart_unconfirmed_snipes] Failed to fetch users for snipe {snipe_id}: {e}")
             continue
             
-        print("sending snipe")
+        # print("sending snipe")
         asyncio.create_task(
             send_snipe_confirmation(bot, channel, guild_id, target, sniper, snipe_id),
             name=f"snipe-confirm-{snipe_id}"
