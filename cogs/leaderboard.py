@@ -21,7 +21,7 @@ class Leaderboard(commands.Cog):
 
     @app_commands.command(name="leaderboard", description="Show the leaderboard")
     @check(check_initialized)
-    async def showleaderboard(self, interaction: discord.Interaction, sort_by: Literal["name", "score", "snipes", "times_sniped"] = "score", sort_direction: Literal["Highest First", "Lowest First"] = "Highest First"):
+    async def showleaderboard(self, interaction: discord.Interaction, sort_by: Literal["name", "score", "achievements", "snipes", "times_sniped"] = "score", sort_direction: Literal["Highest First", "Lowest First"] = "Highest First"):
         """
         Command called to generate current leaderboard in chat
 
@@ -48,7 +48,7 @@ class Leaderboard(commands.Cog):
             rows.append((name, user.snipes, user.times_sniped, achievement_score, score))
         # print("rows: ", rows)
 
-        sort_index = {"name": 0, "snipes": 1, "times_sniped": 2, "score": 3}[sort_by]
+        sort_index = {"name": 0, "snipes": 1, "times_sniped": 2, "achievements": 3, "score": 4}[sort_by]
         rows.sort(key=lambda x: x[sort_index], reverse= sort_direction == "Highest First")
 
         table = []
