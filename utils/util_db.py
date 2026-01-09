@@ -87,14 +87,18 @@ def confirm_snipe(snipe_id):
     
 def update_kill_streaks(guild_id, sniper_id, target_id):
     # print("updating KS")
-    sniper = get_player(guild_id, sniper_id)
-    target = get_player(guild_id, target_id)
-
-    sniper.kill_streak += 1
-    save_player(sniper, guild_id)
-
-    target.kill_streak = 0
-    save_player(target, guild_id)
+    
+    # Increment sniper
+    db.users.update_one(
+        {"user_id": sniper_id, "guild_id": guild_id},
+        {"$inc": {"kill_streak": 1}}
+    )
+    
+    # Reset target to 0
+    db.users.update_one(
+        {"user_id": target_id, "guild_id": guild_id},
+        {"$set": {"kill_streak": 0}}
+    )
 
 def remove_snipe_by_id(snipe_id):
     db.snipes.delete_one({"_id": ObjectId(snipe_id)})
