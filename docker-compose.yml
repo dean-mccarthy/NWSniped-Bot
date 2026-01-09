@@ -25,5 +25,4 @@ services:
       MONGO_URI: mongodb://oriose:nwc@mongo:27017/
 
 volumes:
-  mongo_data:
   sniped_bot_data:
