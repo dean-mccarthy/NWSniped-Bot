@@ -45,8 +45,8 @@ class User:
     snipes: int = 0
     times_sniped: int = 0
     kill_streak: int = 0
-    achievements: list[str] = None
-    targets: list[int] = None
+    achievements: list[str] = field(default_factory=list)
+    targets: list[int] = field(default_factory=list)
 
     @staticmethod
     def from_dict(data):

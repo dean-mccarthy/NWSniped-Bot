@@ -50,20 +50,19 @@ async def love_triangle(ctx: InGameAchvContext, bot: discord.Client) -> bool:
     s_snipes = ctx.s_snipes
     t_snipes = ctx.t_snipes
 
-    s_last = filter_last_week(s_snipes)
+    # s_last = filter_last_week(s_snipes)
     s_shots_recv = filter_last_week(get_user_shots_recv(guild_id, sniper_id))
     t_last = filter_last_week(t_snipes)
-    t_shots_recv = filter_last_week(get_user_shots_recv(guild_id, target_id))
+    # t_shots_recv = filter_last_week(get_user_shots_recv(guild_id, target_id))
 
-    match1 = triangle_solver(s_last, t_shots_recv) # Find players who have been shot by sniper and shot target
-    match2 = triangle_solver(t_last, s_shots_recv) # Find players who have been shot by target and shot sniper
-
-    matches = match1 + list(set(match2) - set(match1)) 
-    achv = AchievementName("LOVE_TRIANGLE")
-    for player_id in matches:
-        player = bot.get_user(player_id)
-        await send_achievement(bot, guild_id, player, achv)
-        push_achv_user(player_id, guild_id, "LOVE_TRIANGLE")
+    matches = triangle_solver(t_last, s_shots_recv) # Find players who have been shot by target and shot sniper
+    print(matches)
+    achv = AchievementName["LOVE_TRIANGLE"]
+    if matches:
+        matches.extend([sniper_id, target_id])
+        for player_id in matches:
+            await check_push_and_send_achv(bot, guild_id, player_id, achv)
+            
     return
 
 def triangle_solver(s_snipes, t_snipes):
@@ -109,14 +108,26 @@ async def check_achievements(bot: discord.Client, guild_id, sniper: discord.Memb
     save_player(sniper_data, guild_id)
 
     # love triangle is intensive and a special case so should run last
-    love_triangle(ctx, bot)
+    await love_triangle(ctx, bot)
+
+async def check_push_and_send_achv(bot: discord.Client, guild_id, player_id,  achievement: AchievementName):
+    player_data = get_player(guild_id, player_id)
+    print(player_data)
 
 
+    if (achievement.value.name not in player_data.achievements):
+        player = bot.get_user(player_id) or await bot.fetch_user(player_id)
+        
+        if player:
+            await send_achievement(bot, guild_id, player, achievement)
+            push_achv_user(player_id, guild_id, achievement.name)
+
+    
 
 async def send_achievement(bot: discord.Client, guild_id, player: discord.Member, achievement: AchievementName):
     guild_data = get_config(guild_id)
     channel = bot.get_channel(guild_data.channel)
-    print(f"sending {achievement} to {guild_data.channel}")
+    # print(f"sending {achievement} to {guild_data.channel}")
     await channel.send(f"{player.mention} has been awarded **{achievement.value.name}**! Happy Hunting!")
     return
 
