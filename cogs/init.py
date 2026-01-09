@@ -17,7 +17,7 @@ class Init(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @app_commands.command(name="ping", description="pongs")
+    @app_commands.command(name="ping", description="tongs")
     async def ping(self, interaction: discord.Interaction):
         file = discord.File("tong.jpg", filename="tong.jpg")
         await interaction.response.send_message(
