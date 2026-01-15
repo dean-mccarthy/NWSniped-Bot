@@ -11,8 +11,8 @@ This discord bot was written in PyCord and stores data using MongoDB. The bot is
 ## Features
 *Commands marked by * can only be used by users with the `@Sniped Control` role*
 
-**Try `/ping` to get used to the commands!**
-### Info
+**Try `/ping` to get used to using commands!**
+### Info:
 
 `/help` Lists all available commands  
 `/rules` Lists the rules of the game as NWC plays (adjust to your liking)
