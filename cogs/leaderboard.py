@@ -62,6 +62,35 @@ class Leaderboard(commands.Cog):
         output = "```text\n" + "\n".join(table) + "\n```"
         await interaction.followup.send(output)
 
+    @app_commands.command(name="playerstats", description="Lists player stats and achievements")
+    @check(check_initialized)                                
+    async def playerstats(self, interaction: discord.Interaction, player: discord.Member):
+        guild_id = interaction.guild.id
+        target_id = player.id
+
+        player_data = get_player(guild_id, target_id)
+        if not player_data:
+            await safe_send(interaction, f"{player.display_name} is not in the game!", ephemeral=True)
+            return
+        embed = discord.Embed(title=f"{player.display_name}'s Stats", color=discord.Color.green())
+        embed.add_field(name="**Snipes**", value=str(player_data.snipes), inline=False)
+        embed.add_field(name="**Times Sniped**", value=str(player_data.times_sniped), inline=False)
+
+        embed.add_field(name="\u200b", value="**Achievements**", inline=True)
+        embed.add_field(name="\u200b", value="**Sniped pt value**", inline=True)
+        embed.add_field(name="\u200b", value="\u200b", inline=True)
+
+        player_achvs = player_data.achievements
+        achv_list = [(AchievementName[a].value.name, AchievementName[a].value.point_value) for a in player_achvs]
+        achv_list.sort(key=lambda x: x[1], reverse=True)
+        for achv in achv_list:
+            embed.add_field(name="\u200b", value=achv[0], inline=True)
+            embed.add_field(name="\u200b", value=achv[1], inline=True)
+            embed.add_field(name="\u200b", value="\u200b", inline=True)
+        
+        await interaction.response.send_message(embed=embed)
+
+
     @app_commands.command(name="listplayers", description="Lists all registered players")
     @check(check_initialized)
     async def list_players(self, interaction: discord.Interaction):

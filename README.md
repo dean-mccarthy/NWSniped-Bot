@@ -42,7 +42,8 @@ This discord bot was written in PyCord and stores data using MongoDB. The bot is
 `/giveachievement`* Give or remove a manual achievement from a player
 
 ### Leaderboard:
-`/leaderboard` Show the current points leaderboard  
+`/leaderboard` Show the current points leaderboard  \
+`/playerstats` Display a players snipes, time sniped, and achievements 
 `/listplayers` List all players in the game \
 `/listsnipes` List a number of recent snipes
 
@@ -81,6 +82,9 @@ Take pictures of other players without them knowing and try to avoid getting pic
 
 
 ## Version Changelog
+
+### V2.2
+- Added playerstats to see individual player info
 
 ### V2.1
 - Added killstreak and shutdown messages
