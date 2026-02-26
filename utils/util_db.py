@@ -161,7 +161,8 @@ def remove_snipes_from_player(guild_id, player_id):
     for snipe in snipes_against:
         db.users.update_one( # update target
         {"guild_id": guild_id, "user_id": snipe.sniper_id},
-        {"$inc": {"snipes": -1}}
+        {"$inc": {"snipes": -1}},
+        {"$pull": {"targets": player_id}}
         )
 
     snipes_by_player = [Snipe.from_dict(snipe) for snipe in db.snipes.find({"guild_id": guild_id, "sniper_id": player_id, "confirmed": True})]

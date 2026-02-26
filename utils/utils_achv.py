@@ -115,7 +115,7 @@ async def check_push_and_send_achv(bot: discord.Client, guild_id, player_id,  ac
     print(player_data)
 
 
-    if (achievement.value.name not in player_data.achievements):
+    if (achievement.name not in player_data.achievements):
         player = bot.get_user(player_id) or await bot.fetch_user(player_id)
         
         if player:

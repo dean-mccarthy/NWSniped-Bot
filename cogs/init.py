@@ -29,7 +29,7 @@ class Init(commands.Cog):
     async def help(self, interaction:discord.Interaction):
         embed = discord.Embed(title="Sniped Bot Help", description="", color=discord.Color.purple())
         embed.add_field(name="Use `/startgame` to get the game started!", value="", inline=False)
-        embed.add_field(name="Here are all of my commands:", value="", inline=False)
+        embed.add_field(name="Here are all of my commands:", value="Check out the [**Documentation**](https://github.com/dean-mccarthy/NWSniped-Bot/blob/main/README.md) for more details", inline=False)
 
         commands = sorted(self.bot.tree.get_commands(), key=lambda cmd:cmd.name)
 
