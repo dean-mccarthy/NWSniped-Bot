@@ -2,7 +2,7 @@
 
 You can earn achievements by completing certain tasks in the game. These will award or penalize points based on the value of a snipe in your game.
 
-You can turn achievements ON or OFF using the `/config` command. If you re-enable achievements late in the game, past snipes will not be evaluated for achievements retrospectively 
+You can turn achievements ON or OFF using the `/config` command. If you re-enable achievements late in the game, past snipes will not be retrospectively evaluated for achievements.
 
 ## In-Game Achievements
 

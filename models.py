@@ -139,10 +139,10 @@ class AchievementData:
 
 
 class AchievementName(Enum):
-    KILL_STREAK             = AchievementData("Kill Streak", 2)
-    SHUT_DOWN               = AchievementData("Shut Down", 1)
-    REVENGEFUL              = AchievementData("Revengeful", 1)
-    LOVE_TRIANGLE           = AchievementData("Love Triangle", 1)
+    KILL_STREAK             = AchievementData("Kill Streak", 2.0)
+    SHUT_DOWN               = AchievementData("Shut Down", 1.0)
+    REVENGEFUL              = AchievementData("Revengeful", 1.0)
+    LOVE_TRIANGLE           = AchievementData("Love Triangle", 1.0)
     SCREEN_PEEK             = AchievementData("Screen Peek", 0.5)
     CAMPER                  = AchievementData("Camper", 0.5)
     NOTHING_PERSONNEL       = AchievementData("Nothing Personnel", 1.0)
