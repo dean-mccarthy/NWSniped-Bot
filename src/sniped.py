@@ -25,7 +25,7 @@ intents.message_content = True
 class MyBot(commands.Bot):
     async def setup_hook(self):
         # Load all cogs before on_ready
-        for filename in os.listdir('./cogs'):
+        for filename in os.listdir('./src/cogs'):
             if filename.endswith('.py') and filename != '__init__.py':
                 try:
                     await self.load_extension(f'cogs.{filename[:-3]}')
