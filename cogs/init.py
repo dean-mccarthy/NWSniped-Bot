@@ -19,7 +19,7 @@ class Init(commands.Cog):
 
     @app_commands.command(name="ping", description="tongs")
     async def ping(self, interaction: discord.Interaction):
-        file = discord.File("tong.jpg", filename="tong.jpg")
+        file = discord.File("images/tong.jpg", filename="tong.jpg")
         await interaction.response.send_message(
         content="All hail father Reese, founder of SneakCore",
         file=file
