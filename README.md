@@ -1,4 +1,4 @@
-# UBC A Cappella Sniped Bot v2.0!
+# UBC A Cappella Sniped Bot!
 Welcome to the Discord Sniped Bot designed for use in UBC A Cappella!  
 This bot exists to facilitate gameplay by keeping track of scores, leaderboards, and acheivements.  
 If you run into any issues or have ideas for additional features please message me on discord: @oriose
