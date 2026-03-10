@@ -1,4 +1,5 @@
 # UBC A Cappella Sniped Bot!
+--------
 Welcome to the Discord Sniped Bot designed for use in UBC A Cappella!  
 This bot exists to facilitate gameplay by keeping track of scores, leaderboards, and acheivements.  
 If you run into any issues or have ideas for additional features please message me on discord: @oriose
@@ -8,14 +9,16 @@ To add the bot to your server, click this link here: [**Invite Bot!**](https://d
 ## Overview
 This discord bot was written in PyCord and stores data using MongoDB. The bot is currently hosted on a VPS.
 
+--------
+
 ## Features
 *Commands marked by * can only be used by users with the `@Sniped Control` role*
 
 **Try `/ping` to get used to using commands!**
 ### Info:
 
-`/help` Lists all available commands  
-`/rules` Lists the rules of the game as NWC plays (adjust to your liking)
+`/help` Lists all available commands \
+`/rules` Lists the rules of the game as NWC plays (adjust to your liking) \
 `/achievements` Lists the available achievements in the game
 
 ### Game Start:  
@@ -29,11 +32,11 @@ This discord bot was written in PyCord and stores data using MongoDB. The bot is
 
 `/config`* View or change the settings of your game \
 `/safetime`* Add, remove, or view safetimes \
-`/resetgame`* Reset all game data and settings for your server  
-`/setchannel`* Set the channel to play the game
+`/resetgame`* Reset all game data and settings for your server \
+`/setchannel`* Set the channel to play the game \
 
 `/joingame` Add yourself to the game \
-`/addplayer`* Add a player to the game  
+`/addplayer`* Add a player to the game \
 `/removeplayer`* Remove a player and all snipes related to them
 
 ### Gameplay:
@@ -43,13 +46,12 @@ This discord bot was written in PyCord and stores data using MongoDB. The bot is
 
 ### Leaderboard:
 `/leaderboard` Show the current points leaderboard  \
-`/playerstats` Display a players snipes, time sniped, and achievements 
+`/playerstats` Display a player's snipes, times sniped, and achievements \
 `/listplayers` List all players in the game \
-`/listsnipes` List a number of recent snipes
-
-### 
+`/listsnipes` List recent snipes
 
 
+--------
 
 ## How To Play
 This section explains the rules of sniped as NWC plays, your group may alter the rules to suit your own preferences.
@@ -80,6 +82,7 @@ Take pictures of other players without them knowing and try to avoid getting pic
 - Snipes cannot occur in the UBC A Cappella Clubroom
   - This does not include the communcal clubs area just outside of the clubroom
 
+--------
 
 ## Version Changelog
 
@@ -96,7 +99,6 @@ Take pictures of other players without them knowing and try to avoid getting pic
   - End of game achievements to come later
 - QOL changes
   - rename initgame -> startgame
-  - 
 
 ### V1.2
 - Transfer hosting to VPS from GCP
