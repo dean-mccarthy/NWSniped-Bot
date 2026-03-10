@@ -76,17 +76,13 @@ class Leaderboard(commands.Cog):
         embed.add_field(name="**Snipes**", value=str(player_data.snipes), inline=False)
         embed.add_field(name="**Times Sniped**", value=str(player_data.times_sniped), inline=False)
 
-        embed.add_field(name="\u200b", value="**Achievements**", inline=True)
-        embed.add_field(name="\u200b", value="**Sniped pt value**", inline=True)
-        embed.add_field(name="\u200b", value="\u200b", inline=True)
+        embed.add_field(name="**Achievements:**", value="", inline=True)
 
         player_achvs = player_data.achievements
         achv_list = [(AchievementName[a].value.name, AchievementName[a].value.point_value) for a in player_achvs]
         achv_list.sort(key=lambda x: x[1], reverse=True)
         for achv in achv_list:
-            embed.add_field(name="\u200b", value=achv[0], inline=True)
-            embed.add_field(name="\u200b", value=achv[1], inline=True)
-            embed.add_field(name="\u200b", value="\u200b", inline=True)
+            embed.add_field(name="", value=f"*{achv[0]}*: {achv[1]}", inline=False)
         
         await interaction.response.send_message(embed=embed)
 
