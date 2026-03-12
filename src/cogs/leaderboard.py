@@ -75,6 +75,7 @@ class Leaderboard(commands.Cog):
         embed = discord.Embed(title=f"{player.display_name}'s Stats", color=discord.Color.green())
         embed.add_field(name="**Snipes**", value=str(player_data.snipes), inline=False)
         embed.add_field(name="**Times Sniped**", value=str(player_data.times_sniped), inline=False)
+        embed.add_field(name="**Current Killstreak**", value=str(player_data.killstreak), inline=False)
 
         embed.add_field(name="**Achievements:**", value="", inline=True)
 
