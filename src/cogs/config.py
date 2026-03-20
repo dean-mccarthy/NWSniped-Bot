@@ -129,7 +129,7 @@ class Config(commands.Cog):
         # print(os.getcwd())
 
         rules_text = None
-        readme_path = os.path.join(os.getcwd(), "Rules.md")
+        readme_path = os.path.join(os.getcwd(), "docs", "Rules.md")
         if os.path.exists(readme_path):
             with open(readme_path, "r", encoding="utf-8") as f:
                 rules_text = f.read()
@@ -158,7 +158,7 @@ class Config(commands.Cog):
     @app_commands.command(name="achievements", description="Lists all available acheivements")
     async def list_achievements(self, interaction: discord.Interaction):
         ach_text = None
-        readme_path = os.path.join(os.getcwd(), "Achievements.md")
+        readme_path = os.path.join(os.getcwd(), "docs","Achievements.md")
         if os.path.exists(readme_path):
             with open(readme_path, "r", encoding="utf-8") as f:
                 ach_text = f.read()
