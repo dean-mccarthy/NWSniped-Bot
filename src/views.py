@@ -58,4 +58,26 @@ class ConfirmSnipeView(View):
         await interaction.response.edit_message(content="❌ Snipe Denied.", view=self)
         self.stop()
 
+
+class EndGameView(View):
+    def __init__(self, timeout=60):
+        super().__init__(timeout=timeout)
+        self.confirmed = None
+
+    @discord.ui.button(label="End Game", style=discord.ButtonStyle.danger)
+    async def confirm(self, interaction: discord.Interaction, button: Button):
+        for item in self.children:
+            item.disabled = True
+        self.confirmed = True
+        await interaction.response.edit_message(content="✅ Confirmed.", view=self)
+        self.stop()
+
+    @discord.ui.button(label="Cancel", style=discord.ButtonStyle.secondary)
+    async def deny(self, interaction: discord.Interaction, button: Button):
+        for item in self.children:
+            item.disabled = True
+        self.confirmed = False
+        await interaction.response.edit_message(content="❌ Cancelled.", view=self)
+        self.stop()
+
         

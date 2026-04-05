@@ -8,7 +8,7 @@ import os
 from dotenv import load_dotenv
 from utils.util_db import *
 from utils.utils_checks import *
-from utils.utils_achv import check_achievements, check_killspree
+from utils.utils_achv import check_achievements, check_killspree, end_game_achvs
 from views import *
 
 load_dotenv()
@@ -104,7 +104,7 @@ class Game(commands.Cog):
             await safe_send(interaction, f"{achievement} has been removed from {player.display_name}")
             
 
-        else:
+        else: # This completely violates DRY but like I need it to do different things don't want to pass the whole interaction everywhere
             if achievement in player_data.achievements:
                 await safe_send(interaction, f"{player.display_name} already has the achievement: {achievement}", ephemeral=True)
                 return
@@ -113,7 +113,64 @@ class Game(commands.Cog):
                 player_data.achievements.append(achievement)
                 save_player(player_data, guild_id)
 
-            await safe_send(interaction, f"{player.mention} has been awarded **{achievement.replace('_', ' ').title()}**! Happy Hunting!", ephemeral=False)
+            await safe_send(interaction, f"{player.mention} has been awarded **{AchievementName[achievement].name}**! Happy Hunting!", ephemeral=False)
+
+    @check(check_initialized)
+    @check(check_perms)
+    @app_commands.command(name="endgame", description="Ends the game")
+    async def end_game(self, interaction: discord.Interaction):
+        guild_id = interaction.guild.id
+        config = get_config(guild_id)
+        view = EndGameView()
+        await interaction.response.send_message("Are you sure you want to end the game?", view=view, ephemeral=True)
+        await view.wait()
+
+        if view.confirmed is True:
+            await interaction.followup.send("Game ended. Thanks for playing!", ephemeral=False)
+            if config.achievements_enabled:
+                await interaction.followup.send("Checking end of game achievements!", ephemeral=True)
+                await end_game_achvs(interaction.client, guild_id)
+
+                await interaction.followup.send("Finished checking achievements! With everything tallied up, the winner is...", ephemeral=False)
+
+                players = get_players_from_guild(guild_id)
+                max_score = float('-inf')
+                winners = []
+                for user in players:
+                    achievement_score = sum(AchievementName[achievement].value.point_value for achievement in user.achievements) if config.achievements_enabled else 0
+                    score = (user.snipes * config.points_per_snipe) - (user.times_sniped * config.penalty_per_snipe) + (achievement_score * config.points_per_snipe)
+                    if score > max_score:
+                        max_score = score
+                        winners = [user]
+                    elif score == max_score:
+                        winners.append(user)
+
+                if len(winners) == 1:
+                    winner = self.bot.get_user(winners[0].user_id) or await interaction.client.fetch_user(winners[0].user_id)
+                    await interaction.followup.send(f"{winner.mention} with a score of {max_score}! Congratulations and thanks for playing!", ephemeral=False)
+                else:
+                    winner_mentions = []
+                    for winner in winners:
+                        winner_member = interaction.client.get_user(winner.user_id) or await self.bot.fetch_user(winner.user_id)
+                        winner_mentions.append(winner_member.mention)
+                    await interaction.followup.send(f"A tie between {', '.join(winner_mentions)} with a score of {max_score}! Congratulations and thanks for playing!", ephemeral=False)
+                
+                file = discord.File("images/hf3.png", filename="hf3.png")
+                await interaction.followup.send(
+                    content="Happy Hunting! -- bot by oriose",
+                    file=file
+                )
+
+                await interaction.followup.send("Use `/resetgame` to clear game data and start a new game.", ephemeral=True)
+        elif view.confirmed is False:
+            await interaction.followup.send("End game cancelled. Good luck and good hunting!", ephemeral=True)
+        else:
+            await interaction.followup.send("End game timed out with no response. Good luck and good hunting!", ephemeral=True)
+        
+
+        
+        return
+
 
 async def send_snipe_confirmation(bot, channel: discord.TextChannel, guild_id, target: discord.Member, sniper: discord.Member, snipe_id):
     snipe = get_snipe_by_id(snipe_id)

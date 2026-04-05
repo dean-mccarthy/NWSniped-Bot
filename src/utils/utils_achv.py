@@ -110,25 +110,27 @@ async def check_achievements(bot: discord.Client, guild_id, sniper: discord.Memb
     # love triangle is intensive and a special case so should run last
     await love_triangle(ctx, bot)
 
-async def check_push_and_send_achv(bot: discord.Client, guild_id, player_id,  achievement: AchievementName):
+async def check_push_and_send_achv(bot: discord.Client, guild_id, player_id,  achievement: AchievementName, msg: str = None):
     player_data = get_player(guild_id, player_id)
-    print(player_data)
-
+    # print(player_data)
 
     if (achievement.name not in player_data.achievements):
         player = bot.get_user(player_id) or await bot.fetch_user(player_id)
         
         if player:
-            await send_achievement(bot, guild_id, player, achievement)
+            await send_achievement(bot, guild_id, player, achievement, msg)
             push_achv_user(player_id, guild_id, achievement.name)
 
     
 
-async def send_achievement(bot: discord.Client, guild_id, player: discord.Member, achievement: AchievementName):
+async def send_achievement(bot: discord.Client, guild_id, player: discord.Member, achievement: AchievementName, msg: str = None):
     guild_data = get_config(guild_id)
     channel = bot.get_channel(guild_data.channel)
     # print(f"sending {achievement} to {guild_data.channel}")
-    await channel.send(f"{player.mention} has been awarded **{achievement.value.name}**! Happy Hunting!")
+    if msg:
+        await channel.send(msg)
+    else:
+        await channel.send(f"{player.mention} has been awarded **{achievement.value.name}**! Happy Hunting!")
     return
 
 def filter_last_week(snipes):
@@ -157,5 +159,49 @@ async def check_killspree(bot: discord.Client, guild_id, sniper: discord.Member,
     if target_data.kill_streak >= 5:
         await channel.send(f"{sniper.mention} has **SHUTDOWN** {target.mention}'s killing spree!")
 
+    return
+
+
+async def end_game_achvs(bot: discord.Client, guild_id):
+    players = get_players_from_guild(guild_id)
+    config = get_config(guild_id)
+    for player in players:
+        player_data = get_player(guild_id, player.user_id)
+        num_snipes = player_data.snipes
+        num_times_sniped = player_data.times_sniped
+        player_member = bot.get_user(player.user_id) or await bot.fetch_user(player.user_id)
+        if num_snipes == 0: # PACIFIST
+            msg = f"{player_member.mention}, where is your sword? Zero snipes, truly a **Pacifist**"
+            await check_push_and_send_achv(bot, guild_id, player.user_id, AchievementName["PACIFIST"], msg)
+        if num_times_sniped == 0: #Sneaky Beaky
+            msg = f"{player_member.mention} played this game all **Sneaky Beaky** like. Walked away without a scratch!"
+            await check_push_and_send_achv(bot, guild_id, player.user_id, AchievementName["SNEAKY_BEAKY"], msg)
+        if (num_snipes*config.points_per_snipe - num_times_sniped*config.penalty_per_snipe) == 0: #Perfectly Balanced
+            msg = f"{player_member.mention} finished the game with their score **Perfectly Balanced**, as all things should be."
+            await check_push_and_send_achv(bot, guild_id, player.user_id, AchievementName["PERFECTLY_BALANCED"], msg)
+    
+    players.sort(key=lambda p: p.snipes, reverse=True)
+    top_snipers = [p for p in players if p.snipes == players[0].snipes]
+    for player in top_snipers:
+        player_disc = bot.get_user(player.user_id) or await bot.fetch_user(player.user_id)
+        msg = f"{player_disc.mention} took down {player.snipes} targets with their **{AchievementName["LICENCE_TO_KILL"].value.name}**!"
+        await check_push_and_send_achv(bot, guild_id, player.user_id, AchievementName["LICENCE_TO_KILL"], msg)
+    
+    players.sort(key=lambda p: p.times_sniped, reverse=True)
+    top_targets = [p for p in players if p.times_sniped == players[0].times_sniped]
+    if top_targets:
+        for player in top_targets:
+            player_disc = bot.get_user(player.user_id) or await bot.fetch_user(player.user_id)
+            msg = f"{player_disc.mention} shot dead {player.times_sniped} times in the Bronx like a **Sitting Duck**"
+            await check_push_and_send_achv(bot, guild_id, player.user_id, AchievementName["SITTING_DUCK"], msg)
+
+    players = get_players_from_guild(guild_id) # need to refetch players to get updated achvs
+    players.sort(key=lambda p: len(p.achievements), reverse=True)
+    if players[0].achievements:
+        achv_hunters = [p for p in players if len(p.achievements) == len(players[0].achievements)]
+        for player in achv_hunters:
+            player_disc = bot.get_user(player.user_id) or await bot.fetch_user(player.user_id)
+            msg = f"{player_disc.mention} is playing the game a different way, acquiring {len(player.achievements)} achievements!"
+            await check_push_and_send_achv(bot, guild_id, player.user_id, AchievementName["ACHIEVEMENT_HUNTER"], msg)
     return
 

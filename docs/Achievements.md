@@ -64,7 +64,9 @@ These achievements can be granted to players using the `/giveachievement` comman
 
 ## End of Game Acheivements
 These achievements will be automatically processed and awarded using the `/endgame` command. (WIP)
-
+* **Achievement Hunter**
+    * Earn the most acheivements in the game
+    * *Snipe Value:* 2
 * **Perfectly balanced**
     * End the game with a score of zero. You must have sniped someone and been sniped at least once
     * *Snipe Value:* 2

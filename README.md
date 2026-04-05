@@ -48,7 +48,8 @@ This discord bot was written in PyCord and stores data using MongoDB. The bot is
 `/leaderboard` Show the current points leaderboard  \
 `/playerstats` Display a player's snipes, times sniped, and achievements \
 `/listplayers` List all players in the game \
-`/listsnipes` List recent snipes
+`/listsnipes` List recent snipes \
+`/endgame` End the game!
 
 
 --------
@@ -85,6 +86,10 @@ Take pictures of other players without them knowing and try to avoid getting pic
 --------
 
 ## Version Changelog
+
+### V2.3
+- Added endgame command!
+
 
 ### V2.2
 - Added playerstats to see individual player info

@@ -156,8 +156,9 @@ class AchievementName(Enum):
     GHOSTS_OF_THE_PAST      = AchievementData("Ghosts of the Past", 0.5)
     PERFECTLY_BALANCED      = AchievementData("Perfectly Balanced", 2.0)
     SITTING_DUCK            = AchievementData("Sitting Duck", 2.0)
-    LICENSE_TO_KILL         = AchievementData("License to Kill", 1.0)
+    LICENCE_TO_KILL         = AchievementData("Licence to Kill", 1.0)
     SNEAKY_BEAKY            = AchievementData("Sneaky Beaky", 1.0)
     PACIFIST                = AchievementData("Pacifist", 1.0)
     COMPLETED_POKEDEX       = AchievementData("Completed Pokedex", 3.0)
+    ACHIEVEMENT_HUNTER      = AchievementData("Achievement Hunter", 2.0)
 
