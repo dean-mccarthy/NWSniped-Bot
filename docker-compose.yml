@@ -18,11 +18,11 @@ services:
     env_file: .env
     ports:
       - "8080:8080"
-    # depends_on:
-    #   - mongo
-    # environment:
-    #   # override MONGO_URI inside compose network
-    #   MONGO_URI: mongodb://oriose:nwc@mongo:27017/
+    depends_on:
+      - mongo
+    environment:
+      # override MONGO_URI inside compose network
+      MONGO_URI: mongodb://oriose:nwc@mongo:27017/
 
 volumes:
   sniped_bot_data:
