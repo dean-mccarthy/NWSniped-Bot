@@ -1,4 +1,4 @@
-# UBC A Cappella Sniped Bot!
+# UBC A Cappella 'Sniped!' Bot
 --------
 Welcome to the Discord Sniped Bot designed for use in UBC A Cappella!  
 This bot exists to facilitate gameplay by keeping track of scores, leaderboards, and acheivements.  
@@ -7,7 +7,7 @@ If you run into any issues or have ideas for additional features please message 
 To add the bot to your server, click this link here: [**Invite Bot!**](https://discord.com/oauth2/authorize?client_id=1361870886885527572&permissions=275146476608&scope=applications.commands+bot)
 
 ## Overview
-This discord bot was written in PyCord and stores data using MongoDB. The bot is currently hosted on a VPS.
+This discord bot was written in Python with PyCord `/` commands and stores data using MongoDB. The bot is currently hosted on a VPS.
 
 --------
 
@@ -88,8 +88,10 @@ Take pictures of other players without them knowing and try to avoid getting pic
 ## Version Changelog
 
 ### V2.3
-- Added endgame command!
-
+- `/endgame` added!
+  - Use this command to end the game
+  - If acheivements are enables, end of game acheivements will be given out
+  - Blocks gameplay after it is used.
 
 ### V2.2
 - Added playerstats to see individual player info
@@ -144,7 +146,7 @@ Take pictures of other players without them knowing and try to avoid getting pic
 - Added removeplayer
 - Added deletesnipe
 - Fixed resetgame
-- /config now shows current configuration when no arguments passed
+- `/config` now shows current configuration when no arguments passed
 - Removals now require confirmation
 
 

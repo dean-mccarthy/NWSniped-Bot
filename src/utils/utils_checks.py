@@ -10,6 +10,8 @@ import random
 
 PACIFIC = ZoneInfo("Canada/Pacific")
 
+class GameEnded(CheckFailure):
+    pass
 
 class GameNotInitialized(CheckFailure):
     pass
@@ -20,6 +22,12 @@ class MissingControlRole(CheckFailure):
 class NowSafeTime(CheckFailure):
     pass
 
+async def check_game_ended(interaction: Interaction):
+    config = get_config(interaction.guild.id)
+    if config.ended:
+        raise GameEnded("Game has already ended. Please use `/resetgame` to begin a new game")
+    return True
+
 async def check_initialized(interaction: Interaction):
     if not interaction.guild:
         raise GameNotInitialized("Guild not found")
@@ -27,6 +35,7 @@ async def check_initialized(interaction: Interaction):
     config = get_config(interaction.guild.id)
     if not config:
         raise GameNotInitialized("Game is not Initialized!")
+    
     return True
 
 async def check_perms(interaction: Interaction):

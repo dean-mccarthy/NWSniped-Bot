@@ -74,6 +74,7 @@ class ServerConfig:
     safe_times: List[SafeTime] = None # (day, start_time, end_time)
     paused: bool = False
     channel: int = 0
+    ended: bool = False
 
     def to_dict(self):
         data = asdict(self)
@@ -91,6 +92,7 @@ class ServerConfig:
             safe_times=[SafeTime.from_dict(st) for st in data.get("safe_times", [])],
             paused=data.get("paused", False),
             channel=data.get("channel", 0),
+            ended=data.get("ended", False)
         )
     
 

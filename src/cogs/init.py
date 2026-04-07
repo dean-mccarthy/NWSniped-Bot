@@ -79,6 +79,7 @@ class Init(commands.Cog):
     @app_commands.describe(player="Select the player to add")
     @check(check_perms)
     @check(check_initialized)
+    @check(check_game_ended)
     async def add_player(self, interaction: discord.Interaction, player: discord.Member):
         guild_id = interaction.guild.id
 
@@ -88,6 +89,7 @@ class Init(commands.Cog):
     
     @app_commands.command(name="joingame", description="Register yourself in the snipe game")
     @check(check_initialized)
+    @check(check_game_ended)
     async def join_game(self, interaction: discord.Interaction):
         guild_id = interaction.guild.id
 
@@ -157,7 +159,7 @@ class Init(commands.Cog):
             save_config(config)
             reset_snipes(guild_id)
             reset_players(guild_id)
-            await interaction.followup.send("Game has been reset.", ephemeral=True)
+            await interaction.followup.send("Game has been reset. All players are still in the game.", ephemeral=True)
         elif view.confirmed is False:
             await interaction.followup.send("Reset was cancelled.", ephemeral=True)
         else:

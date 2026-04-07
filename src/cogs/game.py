@@ -27,6 +27,7 @@ class Game(commands.Cog):
     @app_commands.command(name="snipe", description="Snipe a player!")
     @app_commands.describe(player="Select the player to snipe")
     @check(check_initialized)
+    @check(check_game_ended)
     @check(check_safetime)
     async def snipe(self, interaction: discord.Interaction, player: discord.Member):
         """
@@ -68,6 +69,7 @@ class Game(commands.Cog):
     @app_commands.describe(player= "Player to give achievement to", achievement= "Achievement to give", remove= "set to True to remove achievement")
     @check(check_perms)
     @check(check_initialized)
+    @check(check_game_ended)
     async def giveachievement(self, 
                               interaction: discord.Interaction, 
                               player: discord.Member, 
@@ -116,6 +118,7 @@ class Game(commands.Cog):
             await safe_send(interaction, f"{player.mention} has been awarded **{AchievementName[achievement].name}**! Happy Hunting!", ephemeral=False)
 
     @check(check_initialized)
+    @check(check_game_ended)
     @check(check_perms)
     @app_commands.command(name="endgame", description="Ends the game")
     async def end_game(self, interaction: discord.Interaction):
@@ -127,6 +130,9 @@ class Game(commands.Cog):
 
         if view.confirmed is True:
             await interaction.followup.send("Game ended. Thanks for playing!", ephemeral=False)
+            config.ended = True
+            save_config(config)
+
             if config.achievements_enabled:
                 await interaction.followup.send("Checking end of game achievements!", ephemeral=True)
                 await end_game_achvs(interaction.client, guild_id)

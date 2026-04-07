@@ -168,6 +168,7 @@ class Leaderboard(commands.Cog):
     @app_commands.describe(snipe_number="Select the snipe you want to remove")
     @check(check_perms)
     @check(check_initialized)
+    @check(check_game_ended)
     async def delete_snipe(self, interaction: discord.Interaction, snipe_number: int):
         guild_id = interaction.guild.id
         result = remove_snipe(guild_id, snipe_number)
