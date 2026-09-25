@@ -81,7 +81,7 @@ Take pictures of other players without them knowing and try to avoid getting pic
   - Players not in these classes can still snipe/be sniped
   - Sniping cannot occur for members involved for 10 minutes before/after the class
 - Snipes cannot occur in the UBC A Cappella Clubroom
-  - This does not include the communcal clubs area just outside of the clubroom
+  - This does not include the communal clubs area just outside of the clubroom
 
 --------
 
