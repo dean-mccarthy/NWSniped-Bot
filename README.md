@@ -7,7 +7,7 @@ If you run into any issues or have ideas for additional features please message 
 To add the bot to your server, click this link here: [**Invite Bot!**](https://discord.com/oauth2/authorize?client_id=1361870886885527572&permissions=275146476608&scope=applications.commands+bot)
 
 ## Overview
-This discord bot was written in Python with PyCord `/` commands and stores data using MongoDB. The bot is currently hosted on a VPS.
+This discord bot was written in Python with PyCord `/` commands and stores data using MongoDB. The bot is currently self hosted.
 
 --------
 
@@ -31,9 +31,9 @@ This discord bot was written in Python with PyCord `/` commands and stores data 
     safe_times: None
 
 `/config`* View or change the settings of your game \
-`/safetime`* Add, remove, or view safetimes \
+`/safetime`* Add, remove, or view safetimes | safetimes include the 15 minutes before/after the input time | uses 24h HH:MM format\
 `/resetgame`* Reset all game data and settings for your server \
-`/setchannel`* Set the channel to play the game \
+`/setchannel`* Set the channel to play the game
 
 `/joingame` Add yourself to the game \
 `/addplayer`* Add a player to the game \
@@ -90,7 +90,7 @@ Take pictures of other players without them knowing and try to avoid getting pic
 ### V2.3
 - `/endgame` added!
   - Use this command to end the game
-  - If acheivements are enables, end of game acheivements will be given out
+  - If acheivements are enabled, end of game acheivements will be given out
   - Blocks gameplay after it is used.
 
 ### V2.2
